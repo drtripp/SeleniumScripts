@@ -1,5 +1,5 @@
 import argparse
-import csv
+import tsv
 import operator
 
 from logger1 import *
@@ -35,7 +35,7 @@ def _read(file_, service='default'):
 
     for _ in range(SKIP[service]):
         next(file_)
-    reader = csv.reader(file_)
+    reader = tsv.reader(file_)
     metadata = [
             {'title': row[TITLE[service]], 'link': row[LINK[service]]}
             for row in reader
@@ -69,10 +69,10 @@ if __name__ == '__main__':
     results = aggregate(args.directory)
     if results:
         with open(args.output, 'w') as file_:
-            writer = csv.writer(file_)
+            writer = tsv.writer(file_, delimiter = '\t')
             sorted_results = sorted(
                     results.items(), key=operator.itemgetter(0)
                 )
             for (result, link) in sorted_results:
-                writer.writerow((result, link))
+                writer.writerow((result'\t'link))
     info('{} results written to {}'.format(len(results), args.output))

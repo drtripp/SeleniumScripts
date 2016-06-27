@@ -84,6 +84,6 @@ if __name__ == '__main__':
         )
     if results:
         with open(args.output, 'w') as file_:
-            writer = csv.writer(file_)
+            writer = csv.writer(file_, delimiter = '\t', lineterminator = '\n')
             writer.writerows(results)
     info('Results written to {}'.format(args.output))

@@ -1,0 +1,145 @@
+"[Fx 4.0 beta1] Larry doesn't display domain name nor identity info for https pages in the address bar	https://bugzilla.mozilla.org/attachment.cgi?id=460525&action=diff"
+"drag and drop handlers need to use the proper user context id	https://bugzilla.mozilla.org/attachment.cgi?id=8742198&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8743705&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8745220&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8745840&action=diff"
+"Update the Cookie Management UI to include userContextId	https://bugzilla.mozilla.org/attachment.cgi?id=8703737&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8706449&action=diff"
+"Session storage needs to handle origin attributes correctly.	https://bugzilla.mozilla.org/attachment.cgi?id=8703777&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8703785&action=diff"
+Firefox attempts to update ssl information for chrome URLs that contain inner frames with secure content
+"SSL error page ""Add Exception"" support should be pref-controlled	https://bugzilla.mozilla.org/attachment.cgi?id=289553&action=diff"
+"Identity popup calls override service incorrectly now	https://bugzilla.mozilla.org/attachment.cgi?id=319413&action=diff"
+"Move browser_bug822367.js test to browser/	https://bugzilla.mozilla.org/attachment.cgi?id=715765&action=diff"
+"Identity UI should use different strings for mixed content	https://bugzilla.mozilla.org/attachment.cgi?id=400023&action=diff"
+"Remove the padlock from the status bar	https://bugzilla.mozilla.org/attachment.cgi?id=398425&action=diff"
+"Adding exception accidentally allowed in framed certificate error page	https://bugzilla.mozilla.org/attachment.cgi?id=612514&action=diff"
+"Fix XULBrowserWindow's broken _hostChanged logic	https://bugzilla.mozilla.org/attachment.cgi?id=775194&action=diff"
+The binary release For Solaris 10 is missing libraries
+"Implement Security UI Telemetry	https://bugzilla.mozilla.org/attachment.cgi?id=641739&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=641740&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=641744&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=642277&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=647404&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=648590&action=diff"
+"Malware/phishing UI Telmetry does not separately measure iframes	https://bugzilla.mozilla.org/attachment.cgi?id=730758&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=731593&action=diff"
+"Insufficient validation in browser.js can lead to arbitrary code execution	https://bugzilla.mozilla.org/attachment.cgi?id=185670&action=diff"
+track 1.0.3 security audit work and fixes for related security bugs
+content calling java methods causes trouble
+"cross site scripting if the user opens a link and then presses ""back"""
+"Addon Install feature can execute javascript in context of ""chrome"""
+"Full Remote Compromise using some of my previous vulns	https://bugzilla.mozilla.org/attachment.cgi?id=183002&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=183020&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=183106&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=183185&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=183209&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=183306&action=diff"
+function onFullScreen() should check for untrusted events
+"Add hostname to title bar of windows that don't have location bars	https://bugzilla.mozilla.org/attachment.cgi?id=197923&action=diff"
+"URL bar not always updated when scripts interact with about:blank windows	https://bugzilla.mozilla.org/attachment.cgi?id=255442&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=263158&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=263206&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=263208&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=263209&action=diff"
+Resource Directory Traversal Vulnerability
+"""Secure Connection Failed"" makes it difficult to work in the web hosting industry	https://bugzilla.mozilla.org/attachment.cgi?id=318920&action=diff"
+"Address bar spoofing possible via window.open() + HTTP 204 responses or window.stop()	https://bugzilla.mozilla.org/attachment.cgi?id=441581&action=diff"
+"""view-source:"" on DV SSL does not update site identity button text -> spoofing	https://bugzilla.mozilla.org/attachment.cgi?id=523174&action=diff"
+Fix browser_addCertException.js and browser_blockHPKP.js to work under e10s
+"Site identity data is not updated in some cases of weird certificates	https://bugzilla.mozilla.org/attachment.cgi?id=8555893&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8555894&action=diff"
+[META} Fixing createPrincipalFromReferer callers to support contextual identities.
+"Mitigate clickjacking of about:certerror	https://bugzilla.mozilla.org/attachment.cgi?id=578412&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=578803&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=727676&action=diff"
+"Identity state of IDENTITY_MODE_UNKNOWN is set for about:home when a new window is created	https://bugzilla.mozilla.org/attachment.cgi?id=772380&action=diff"
+Create a website running package signing tools.
+"Update the PrivilegedPackageRoot certificate	https://bugzilla.mozilla.org/attachment.cgi?id=8689385&action=diff"
+Don't include hidden files when packaging NSec packages.
+"[e10s] ""Untrusted Connection"" page's ""Add Exception"" button does nothing	https://bugzilla.mozilla.org/attachment.cgi?id=8449625&action=diff"
+"When Firefox is not already running, it accepts chrome:// URLs without -chrome	https://bugzilla.mozilla.org/attachment.cgi?id=193392&action=diff"
+"Address bar should use another color when lock icon is broken (https page with mixed content)	https://bugzilla.mozilla.org/attachment.cgi?id=192251&action=diff"
+"Set userContextId on the docShell for new remote (e10s) tabs	https://bugzilla.mozilla.org/attachment.cgi?id=8709862&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8709863&action=diff"
+"Add a security delay to the main action of PopupNotifications	https://bugzilla.mozilla.org/attachment.cgi?id=703232&action=diff"
+"Firefox UI to clear SSL session	https://bugzilla.mozilla.org/attachment.cgi?id=190517&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=190524&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=190578&action=diff"
+"Address bar accepts dragged javascript urls	https://bugzilla.mozilla.org/attachment.cgi?id=193502&action=diff"
+"Going back from secure page to error page does not clear yellow bar	https://bugzilla.mozilla.org/attachment.cgi?id=198362&action=diff"
+"Ugly wrapping of label for submission status of certificate pinning errors in localizations with texts longer than English	https://bugzilla.mozilla.org/attachment.cgi?id=8597933&action=diff"
+[UX] Revise the error page shown for SSLv3
+"Wrong principal is used for nsChannelClassifier checks (tracking Protection blocks videos on facebook, and gifs-reencoded-as-h.264 on Twitter)	https://bugzilla.mozilla.org/attachment.cgi?id=8563913&action=diff"
+"possible for unsignend script to call functions inside signed scripts (jar)	https://bugzilla.mozilla.org/attachment.cgi?id=533639&action=diff"
+meta security bug, per chofmann's question
+Errorsafe
+Firefox sends unexpected outgoing http requests to several sites.
+Repeated and persistant Prompt for username and password
+Trendmicro virus scan is crashing in Firefox
+Configurated policies are ignored
+"The ""Allow sites to set cookies"" setting does not ""stick"" between sessions"
+"Whitelist blocked extension install can attempt to add ""install"" to the whitelist"
+Yellow location bar background is not explained or visually linked to something understandable
+Users can be tricked into thinking sites are encrypted with new visual cues added by bug 417844
+Option to ignore the malware warning for a certain page/site or ignore for whole session
+MALWARE attack on Firefox from http://creditoslibres.piczo.com/ -> blocked by forgery alert
+Firefox crashes when executing the given javascript
+Minor update 3.5 users to 3.6 and EOL it
+"Update the Windows RDF for the Flash Player 10.3.181.22 Security Update	https://bugzilla.mozilla.org/attachment.cgi?id=537537&action=diff"
+Collect telemetry data to determine what % of users use the password manager to save passwords
+"Telemetry for Geolocation Prompt UI	https://bugzilla.mozilla.org/attachment.cgi?id=659493&action=diff"
+"""This is Nightly secure page"" for an http page"
+Add some more noticeable UI to warn RC4-only servers
+"Rewrite install-blocked message to reflect reality	https://bugzilla.mozilla.org/attachment.cgi?id=222146&action=diff"
+"text overlaps image on SSLv3 error page with small firefox windows	https://bugzilla.mozilla.org/attachment.cgi?id=8703280&action=diff"
+Re-enable SHA-1 certificates
+[UX] Define interface needed to support containers
+"Add New Container to File menu	https://bugzilla.mozilla.org/attachment.cgi?id=8666675&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8666676&action=diff"
+"Add tab decoration signifying userContextId	https://bugzilla.mozilla.org/attachment.cgi?id=8657286&action=diff"
+"Add URL bar decoration signifying userContextId	https://bugzilla.mozilla.org/attachment.cgi?id=8657382&action=diff"
+[meta] Implement minimal UI prototype for Contextual Identity Project
+"Implement Mixed Content Blocker New Icon - Backend Changes	https://bugzilla.mozilla.org/attachment.cgi?id=687575&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=689482&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=690608&action=diff"
+"Implement Mixed Content Blocker New Icon - Frontend Changes	https://bugzilla.mozilla.org/attachment.cgi?id=698022&action=diff"
+"Implement Mixed Content Blocker Doorhanger - Frontend Changes	https://bugzilla.mozilla.org/attachment.cgi?id=706132&action=diff"
+Learn More pages for Mixed Content Blocker
+Interactive content blocking screen has typos
+"don't show the mixed display content indicator if the top level load is http://	https://bugzilla.mozilla.org/attachment.cgi?id=8641935&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8647742&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8647749&action=diff"
+"address bar does not contain the correct URL when loading a redirect to an SSL error page in a new tab	https://bugzilla.mozilla.org/attachment.cgi?id=576901&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=578297&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=580759&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=622010&action=diff"
+"Strike through https in location bar for sites that have mixed active content loaded.	https://bugzilla.mozilla.org/attachment.cgi?id=8630345&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8630951&action=diff"
+"When reporting a cert error (from certerror page), browser console says ""Sending message that cannot be cloned. Are you trying to send an XPCOM object?""	https://bugzilla.mozilla.org/attachment.cgi?id=8601123&action=diff"
+"Dragging & Dropping a link on the ""New Window""/""New Tab"" buttons can load priviliged xul	https://bugzilla.mozilla.org/attachment.cgi?id=197773&action=diff"
+Copy for string changes to DNT dialog
+"Usability concerns for new ""restore default settings"" UI in SSL error page"
+Write Learn More SUMO Article for Insecure Password Warning in Control Center
+"Upgrade Firefox to NSS 3.15.2 to fix bug 894370	https://bugzilla.mozilla.org/attachment.cgi?id=820575&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=820581&action=diff"
+"Countermeasures for Java/plugin/extension vulnerabilities (disable, warn, offer updates)	https://bugzilla.mozilla.org/attachment.cgi?id=271173&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=276502&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=276880&action=diff"
+"""invalid security certificate"" on Google and other major sites due to Kaspersky"
+Strings for Control Center when HTTP pages have login forms
+Rewrite browser_bug906190.js with Tasks and re-enable it on Linux
+"Add a preference to turn on/off insecure password warnings	https://bugzilla.mozilla.org/attachment.cgi?id=8680915&action=diff"
+"Revisit ""Your login could be compromised"" string for Insecure Password Warning	https://bugzilla.mozilla.org/attachment.cgi?id=8711230&action=diff"
+"adding news feed reader causes trouble	https://bugzilla.mozilla.org/attachment.cgi?id=240203&action=diff"
+"BrowserOnCommand() for Firefox netError page uses wrong location object	https://bugzilla.mozilla.org/attachment.cgi?id=292472&action=diff"
+"Can't install XPI with a click on the link with target=""_blank""	https://bugzilla.mozilla.org/attachment.cgi?id=274467&action=diff"
+"[mz2] file action dialog controls vulnerable to refocus race	https://bugzilla.mozilla.org/attachment.cgi?id=299684&action=diff"
+"URL files (IE bookmarks) cause remote code to run as local file when opened directly	https://bugzilla.mozilla.org/attachment.cgi?id=315677&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=316318&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=355435&action=diff"
+"Maybe switch ""run by"" text to ""owned by"" for EV certificates in the Control Center	https://bugzilla.mozilla.org/attachment.cgi?id=8757021&action=diff"
+Firefox should list the security key exchange mechanism (ECDHE_RSA)
+"browser.mixedcontent.warning.infoURL should use SSL	https://bugzilla.mozilla.org/attachment.cgi?id=791909&action=diff"
+"Holding enter allows arbitrary extension installation.	https://bugzilla.mozilla.org/attachment.cgi?id=555021&action=diff"
+"The status bar domain name display is not updated when the ""back"" button is clicked (bfcache, XSLT)	https://bugzilla.mozilla.org/attachment.cgi?id=207531&action=diff"
+"arbitrary code execution via sidebar (part 3)	https://bugzilla.mozilla.org/attachment.cgi?id=183536&action=diff"
+"Telemetry data for Mixed Content (display and script)	https://bugzilla.mozilla.org/attachment.cgi?id=768537&action=diff"
+"SSL Warning UI Telmetry should only measure top level frame warnings	https://bugzilla.mozilla.org/attachment.cgi?id=758239&action=diff"
+"Can't access to untrusted sites	https://bugzilla.mozilla.org/attachment.cgi?id=8384949&action=diff"
+"Change browser.identity.ssl_domain_display pref default to 1	https://bugzilla.mozilla.org/attachment.cgi?id=364344&action=diff"
+"Showing a blocked pop-up bypasses CheckLoadURI (can load file: URLs)	https://bugzilla.mozilla.org/attachment.cgi?id=254121&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=254137&action=diff"
+"XSS with context menu	https://bugzilla.mozilla.org/attachment.cgi?id=616324&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=636003&action=diff"
+ssl_error_unsupported_version error page has too many stop signs
+"about:home's search doesn't sanitize input and uses it for .innerHTML (CSS running, JavaScript on events)	https://bugzilla.mozilla.org/attachment.cgi?id=8665832&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8665835&action=diff"
+"lock icon in status bar should open security info on single click	https://bugzilla.mozilla.org/attachment.cgi?id=384266&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=386541&action=diff"
+"ship with fewer security warnings showing by default	https://bugzilla.mozilla.org/attachment.cgi?id=229054&action=diff"
+"Disappearing mixed display icon - grey triangle on Ubuntu	https://bugzilla.mozilla.org/attachment.cgi?id=804620&action=diff"
+Redirects permit cross-domain and local-system image disclosure via CANVAS
+Odd artifacts when on More Information button mousedown
+"arbitrary code execution via sidebar	https://bugzilla.mozilla.org/attachment.cgi?id=176487&action=diff"
+"arbitrary code execution via sidebar (part 2)	https://bugzilla.mozilla.org/attachment.cgi?id=180547&action=diff"
+"Secure Site indicator not shown when secure site loaded in new tab	https://bugzilla.mozilla.org/attachment.cgi?id=184315&action=diff"
+Firefox does not insert saved password without Username (blank Username)
+"Mixed Content Telemetry - How many times do users click ""Disable Protection""	https://bugzilla.mozilla.org/attachment.cgi?id=799149&action=diff"
+https://myaccount.rosettastone.com/manage/nolicense - Mixed Display issues
+"Fix UI issues with SSL error reporting	https://bugzilla.mozilla.org/attachment.cgi?id=8555422&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=8569447&action=diff"
+"Turn on pref to block mixed active content	https://bugzilla.mozilla.org/attachment.cgi?id=712013&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=713061&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=713069&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=713208&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=733033&action=diff"
+"There's no obvious (to users) reason why we're showing yellow-triangle-with-exclamation-point vs. globe, for mixed-content sites	https://bugzilla.mozilla.org/attachment.cgi?id=714528&action=diff"
+"Large Shield Icon Missing in Mixed Content Blocker Doorhanger	https://bugzilla.mozilla.org/attachment.cgi?id=714663&action=diff"
+"[Windows] Shield icon missing in Mixed content blocker doorhanger	https://bugzilla.mozilla.org/attachment.cgi?id=716692&action=diff"
+"Replace grey globe with grey warning triangle when the page contains mixed passive content	https://bugzilla.mozilla.org/attachment.cgi?id=786589&action=diff"
+"Mixed display-only pages showing the wrong text	https://bugzilla.mozilla.org/attachment.cgi?id=801852&action=diff"
+"Change the Larry Menu Text when Mixed Scripts are blocked but the page contains Mixed Display	https://bugzilla.mozilla.org/attachment.cgi?id=804808&action=diff"
+"Ship blocklist.xml with Firefox	https://bugzilla.mozilla.org/attachment.cgi?id=310358&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=310705&action=diff"
+[Control Center] Information about the website certificate are truncated and incomplete by default
+"Wrong mouse over message for crossed out lock icon	https://bugzilla.mozilla.org/attachment.cgi?id=8733004&action=diff"
+Use a lock with a strikethrough for HTTP pages that have Password Fields in the Control Center
+Add Learn More link to Insecure Password Warning in Control Center
+All PDFs trigger the insecure password warning
+"Don't warn about insecure passwords on localhost	https://bugzilla.mozilla.org/attachment.cgi?id=8685412&action=diff"
+"Turn on Insecure Password Warning for Firefox Dev Edition	https://bugzilla.mozilla.org/attachment.cgi?id=8710111&action=diff"
+"Bugs with ""Learn More"" link for Mixed Content Blocker in Control Center	https://bugzilla.mozilla.org/attachment.cgi?id=8664798&action=diff"
+"Remove/hide status bar domain display text	https://bugzilla.mozilla.org/attachment.cgi?id=370522&action=diff"
+"Selecting ""More Information"" from the Larry UI does not launch Page Info	https://bugzilla.mozilla.org/attachment.cgi?id=306084&action=diff	https://bugzilla.mozilla.org/attachment.cgi?id=307470&action=diff"
+"Strikethrough of ""http"" appears broken when protection is disabled on pages with insecure content"
