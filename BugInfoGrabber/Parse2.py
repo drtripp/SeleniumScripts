@@ -22,7 +22,7 @@ def parse(browser, listfile, output):
             if(row[0] == ''):
 			    break
             print row[1]
-            results.append(parser.parse(row[1]))
+            results = results + (parser.parse(row[0], row[1]))
             try:
                 row = urlreader.next()
             except StopIteration:
@@ -72,4 +72,6 @@ if __name__ == '__main__':
     if results:
         with open(args.output, 'wb') as file_:
             writer = csv.writer(file_, delimiter = '\t', lineterminator = '\n')
+            stuff = ['Bug ID', 'Title', 'Link to Bug', 'File', 'Link to diff', 'Old Code (maybe)', 'New Code (maybe)']
+            writer.writerow(stuff)
             writer.writerows(results)

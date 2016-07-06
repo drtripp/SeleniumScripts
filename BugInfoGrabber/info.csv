@@ -1,0 +1,1802 @@
+Bug ID	Title	Link to Bug	File	Link to diff	Old Code (maybe)	New Code (maybe)
+b579095	[Fx 4.0 beta1] Larry doesn't display domain name nor identity info for https pages in the address bar	https://bugzilla.mozilla.org/show_bug.cgi?id=579095	"
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=460525&action=diff	"
+    this._identityIconLabel.parentNode.hidden = icon_label ? false : true;"	"
+    this._identityIconLabel.parentNode.collapsed = icon_label ? false : true;"
+b1237077	drag and drop handlers need to use the proper user context id	https://bugzilla.mozilla.org/show_bug.cgi?id=1237077	"
+a/dom/base/contentAreaDropListener.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8742198&action=diff	"
+                               : secMan.getSimpleCodebasePrincipal(ioService.newURI(""file:///"", null, null));"	"
+                               : secMan.createCodebasePrincipal(ioService.newURI(""file:///"", null, null), {});"
+b1199466	Update the Cookie Management UI to include userContextId	https://bugzilla.mozilla.org/show_bug.cgi?id=1199466	"
+a/netwerk/cookie/nsCookie.cpp
+a/netwerk/cookie/nsCookie.h
+a/netwerk/cookie/nsCookieService.cpp
+a/netwerk/cookie/nsCookieService.h
+a/netwerk/cookie/nsICookie.idl
+a/netwerk/cookie/nsICookie2.idl"	https://bugzilla.mozilla.org/attachment.cgi?id=8703737&action=diff	"
+                 bool              aIsHttpOnly)
+
+                              aIsSession, aIsSecure, aIsHttpOnly);
+"	"
+                 bool              aIsHttpOnly,
+                 const OriginAttributes& aOriginAttributes)
+                              aIsSession, aIsSecure, aIsHttpOnly,
+                              aOriginAttributes);"
+b1235657	Session storage needs to handle origin attributes correctly.	https://bugzilla.mozilla.org/show_bug.cgi?id=1235657	"
+a/caps/tests/unit/test_origin.js
+a/dom/base/ChromeUtils.cpp
+a/dom/base/ChromeUtils.h
+a/dom/webidl/ChromeUtils.webidl"	https://bugzilla.mozilla.org/attachment.cgi?id=8703777&action=diff		
+b1235658	in-content preferences for offline apps needs to use origin attributes when creating permission principal	https://bugzilla.mozilla.org/show_bug.cgi?id=1235658	"
+a/browser/components/preferences/in-content/advanced.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8704565&action=diff	"
+    var principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(origin);
+
+    try {
+      var attrs = ChromeUtils.createDefaultContextOriginAttributes(origin);
+      var originURI = Services.io.newURI(origin, null, null);
+      principal = Services.scriptSecurityManager.createCodebasePrincipal(originURI, attrs);
+    } catch (e) {
+      return;
+    }"	"
+
+    var principal;"
+b1235661	sync services needs to use origin attributes correctly	https://bugzilla.mozilla.org/show_bug.cgi?id=1235661	"
+a/dom/requestsync/RequestSyncService.jsm"	https://bugzilla.mozilla.org/attachment.cgi?id=8735171&action=diff	"
+      let prin = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(key);
+      if (!ChromeUtils.originAttributesMatchPattern(prin.originAttributes, pattern)) {
+"	"
+      let attrs = ChromeUtils.createOriginAttributesFromOrigin(key);
+      attra.userContextId = 0; // force user context to default
+      if (!ChromeUtils.originAttributesMatchPattern(attrs, pattern)) {"
+b1235668	AppProcessChecker needs to stop using createCodebasePrincipalFromOrigin	https://bugzilla.mozilla.org/show_bug.cgi?id=1235668	"
+a/dom/ipc/AppProcessChecker.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=8704569&action=diff	"
+  nsCOMPtr<nsIPrincipal> principal;
+  securityManager->CreateCodebasePrincipalFromOrigin(aOrigin,
+                                                     getter_AddRefs(principal));
+
+
+  nsCOMPtr<nsIPrincipal> principal =
+    BasePrincipal::CreateCodebasePrincipal(aOrigin, originAttributes);
+  NS_ENSURE_TRUE(principal, false);"	"
+  nsAutoCString originNoSuffix;
+  DefaultContextOriginAttributes originAttributes;
+  bool ok = originAttributes.PopulateFromOrigin(aOrigin, originNoSuffix);
+  NS_ENSURE_TRUE(ok, false);"
+b1235929	PushRecord needs to use origin attributes when creating a codebase principal	https://bugzilla.mozilla.org/show_bug.cgi?id=1235929	"
+a/dom/push/PushRecord.jsm"	https://bugzilla.mozilla.org/attachment.cgi?id=8704564&action=diff	"
+        principal = Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(url);
+
+        var uri = Services.io.newURI(url, null, null);
+        principal = Services.scriptSecurityManager.createCodebasePrincipal(uri, attrs);
+"	"
+
+        var attrs = ChromeUtils.createDefaultContextOriginAttributes(url);"
+b1237066	FeedWriter.js needs to use createCodebasePrincipal with global context user id	https://bugzilla.mozilla.org/show_bug.cgi?id=1237066	"
+a/browser/components/feeds/FeedWriter.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8718224&action=diff	"
+    let secman = Cc[""@mozilla.org/scriptsecuritymanager;1""].
+                 getService(Ci.nsIScriptSecurityManager);
+    this._feedPrincipal = secman.getSimpleCodebasePrincipal(this._feedURI);
+"	"
+    let attrs = ChromeUtils.createOriginAttributesFromOrigin(this._feedURI);
+    attrs = ChromeUtils.setDefaultUserContextId(attrs);
+    this._feedPrincipal = 
+      Services.scriptSecurityManager.createCodebasePrincipal(this._feedURI, attrs);"
+b1262009	Firefox attempts to update ssl information for chrome URLs that contain inner frames with secure content	https://bugzilla.mozilla.org/show_bug.cgi?id=1262009
+b699586	Bug in Content Security Policy for setInterval and setTimeout when argument is a function	https://bugzilla.mozilla.org/show_bug.cgi?id=699586
+b402207	"SSL error page ""Add Exception"" support should be pref-controlled"	https://bugzilla.mozilla.org/show_bug.cgi?id=402207	"
+browser/app/profile/firefox.js
+browser/base/content/browser.js
+security/manager/pki/resources/content/exceptionDialog.js"	https://bugzilla.mozilla.org/attachment.cgi?id=289553&action=diff		
+b408211	Larry keeps focus, requires more clicks than usual	https://bugzilla.mozilla.org/show_bug.cgi?id=408211
+b432241	Identity popup calls override service incorrectly now	https://bugzilla.mozilla.org/show_bug.cgi?id=432241	"
+browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=319413&action=diff	"
+      locationObj.hostname = location.hostname
+
+   *                           .hostname)
+                                                    this._lastLocation.port, "	"
+      locationObj.hostname = location.hostname;
+      locationObj.port = location.port;
+   *                           .hostname and .port)
+                                                    (this._lastLocation.port || 443),"
+b442839	"""Get me out of here..."" should direct to home page"	https://bugzilla.mozilla.org/show_bug.cgi?id=442839
+b842198	Move browser_bug822367.js test to browser/	https://bugzilla.mozilla.org/show_bug.cgi?id=842198	"
+a/browser/base/content/test/Makefile.in
+a/content/base/test/chrome/browser_bug822367.js
+a/content/base/test/file_bug822367_1.html
+a/content/base/test/file_bug822367_3.html
+a/content/base/test/file_bug822367_4.html
+a/content/base/test/file_bug822367_4.js
+a/content/base/test/file_bug822367_4B.html
+a/content/base/test/file_bug822367_5.html
+a/content/base/test/file_bug822367_6.html
+a/content/base/test/Makefile.in
+a/content/base/test/chrome/Makefile.in"	https://bugzilla.mozilla.org/attachment.cgi?id=715765&action=diff		
+b435035	Identity UI should use different strings for mixed content	https://bugzilla.mozilla.org/show_bug.cgi?id=435035	"
+a/browser/base/content/browser.js
+a/browser/base/content/test/Makefile.in
+a/browser/base/content/test/browser_bug435035.js
+a/browser/base/content/test/test_bug435035.html
+a/browser/locales/en-US/chrome/browser/browser.properties"	https://bugzilla.mozilla.org/attachment.cgi?id=400023&action=diff	"
+  get _staticStrings () {
+    delete this._staticStrings;
+    this._staticStrings = {};
+    this._staticStrings[this.IDENTITY_MODE_DOMAIN_VERIFIED] = {
+      encryption_label: gNavigatorBundle.getString(""identity.encrypted"")
+    };
+    this._staticStrings[this.IDENTITY_MODE_IDENTIFIED] = {
+      encryption_label: gNavigatorBundle.getString(""identity.encrypted"")
+    };
+    this._staticStrings[this.IDENTITY_MODE_UNKNOWN] = {
+      encryption_label: gNavigatorBundle.getString(""identity.unencrypted"")
+    };
+    return this._staticStrings;
+    
+    if (state & Components.interfaces.nsIWebProgressListener.STATE_IDENTITY_EV_TOPLEVEL)
+
+    else if (state & Components.interfaces.nsIWebProgressListener.STATE_SECURE_HIGH)
+    this._identityPopupEncLabel.textContent = this._staticStrings[newMode].encryption_label;"	"
+  get _encryptionLabel () {
+    delete this._encryptionLabel;
+    this._encryptionLabel = {};
+    this._encryptionLabel[this.IDENTITY_MODE_DOMAIN_VERIFIED] =
+      gNavigatorBundle.getString(""identity.encrypted"");
+    this._encryptionLabel[this.IDENTITY_MODE_IDENTIFIED] =
+      gNavigatorBundle.getString(""identity.encrypted"");
+    this._encryptionLabel[this.IDENTITY_MODE_UNKNOWN] =
+      gNavigatorBundle.getString(""identity.unencrypted"");
+    this._encryptionLabel[this.IDENTITY_MODE_MIXED_CONTENT] =
+      gNavigatorBundle.getString(""identity.mixed_content"");
+    return this._encryptionLabel;
+
+
+    let nsIWebProgressListener = Ci.nsIWebProgressListener;
+    if (state & nsIWebProgressListener.STATE_IDENTITY_EV_TOPLEVEL)
+    else if (state & nsIWebProgressListener.STATE_SECURE_HIGH)
+    this._identityPopupEncLabel.textContent = this._encryptionLabel[newMode];"
+b514475	Remove the padlock from the status bar	https://bugzilla.mozilla.org/show_bug.cgi?id=514475	"
+a/browser/base/content/browser.js
+a/browser/base/content/browser.xul
+a/browser/base/content/test/browser_pageInfo.js
+a/browser/themes/gnomestripe/browser/browser.css
+a/browser/themes/gnomestripe/browser/jar.mn
+a/browser/themes/pinstripe/browser/browser.css
+a/browser/themes/pinstripe/browser/jar.mn
+a/browser/themes/winstripe/browser/browser.css
+a/browser/themes/winstripe/browser/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=398425&action=diff	"
+    if (level) {
+      this.securityButton.setAttribute(""level"", level);
+      this.securityButton.hidden = false;
+      // We don't style the Location Bar based on the the 'level' attribute
+      // anymore, but still set it for third-party themes.
+      if (gURLBar)
+    } else {
+      this.securityButton.hidden = true;
+      this.securityButton.removeAttribute(""level"");
+      if (gURLBar)"	"
+    // We don't style the Location Bar based on the the 'level' attribute
+    // anymore, but still set it for third-party themes.
+    if (gURLBar) {
+      if (level)
+
+      else
+"
+b742645	Adding exception accidentally allowed in framed certificate error page	https://bugzilla.mozilla.org/show_bug.cgi?id=742645	"
+a/browser/components/certerror/content/aboutCertError.css
+a/browser/components/certerror/content/aboutCertError.xhtml"	https://bugzilla.mozilla.org/attachment.cgi?id=612514&action=diff		
+b893424	Fix XULBrowserWindow's broken _hostChanged logic	https://bugzilla.mozilla.org/show_bug.cgi?id=893424	"
+a/browser/base/content/browser.js
+a/browser/base/content/test/browser_bug882977.js"	https://bugzilla.mozilla.org/attachment.cgi?id=775194&action=diff	"
+    // Initialize the security button's state and tooltip text.  Remember to reset
+    // _hostChanged, otherwise onSecurityChange will short circuit.
+  _hostChanged: false, // onLocationChange will flip this bit
+        !this._hostChanged) {
+#ifdef DEBUG
+      try {
+        var contentHost = gBrowser.contentWindow.location.host;
+        if (this._host !== undefined && this._host != contentHost) {
+            Components.utils.reportError(
+              ""ASSERTION: browser.js host is inconsistent. Content window has "" +
+              ""<"" + contentHost + ""> but cached host is <"" + this._host + "">.\n""
+            );
+        }
+      } catch (ex) {}
+#endif
+    }
+
+#ifdef DEBUG
+    try {
+      this._host = gBrowser.contentWindow.location.host;
+    } catch(ex) {
+      this._host = null;
+    }
+#endif
+
+    this._hostChanged = false;"	"
+    // Initialize the security button's state and tooltip text.
+
+  _lastLocation: null,
+        this._lastLocation == uri.spec)
+
+
+    this._lastLocation = uri.spec;
+"
+b388803	The binary release For Solaris 10 is missing libraries	https://bugzilla.mozilla.org/show_bug.cgi?id=388803
+b767676	Implement Security UI Telemetry	https://bugzilla.mozilla.org/show_bug.cgi?id=767676	"
+a/browser/base/content/browser.js
+a/docshell/base/nsDocShell.cpp
+a/security/manager/boot/public/nsISecurityUITelemetry.idl
+a/security/manager/pki/resources/content/exceptionDialog.js"	https://bugzilla.mozilla.org/attachment.cgi?id=641739&action=diff		
+b850435	Malware/phishing UI Telmetry does not separately measure iframes	https://bugzilla.mozilla.org/show_bug.cgi?id=850435	"
+a/browser/base/content/browser.js
+a/docshell/base/nsDocShell.cpp
+a/security/manager/boot/public/nsISecurityUITelemetry.idl"	https://bugzilla.mozilla.org/attachment.cgi?id=730758&action=diff		
+b297038	Insufficient validation in browser.js can lead to arbitrary code execution	https://bugzilla.mozilla.org/show_bug.cgi?id=297038	"
+browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=185670&action=diff		
+b285436	Idea for new cookie handling	https://bugzilla.mozilla.org/show_bug.cgi?id=285436
+b285669	provide option to change settings for alert when switching from secure/insecure mode	https://bugzilla.mozilla.org/show_bug.cgi?id=285669
+b286418	non-responsive https server leaves SSL lock locked showing previous site's DNSname	https://bugzilla.mozilla.org/show_bug.cgi?id=286418
+b287210	Cannot determine root certificate for a web site	https://bugzilla.mozilla.org/show_bug.cgi?id=287210
+b287287	"""Security Error: Domain Name Mismatch"" - Cancel button fails to reset location-bar URI"	https://bugzilla.mozilla.org/show_bug.cgi?id=287287
+b288109	No consumer differentiation between Class 2 and Class 3 SSL certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=288109
+b288732	Malformed URL cause FireFox to have strange behavior and crash	https://bugzilla.mozilla.org/show_bug.cgi?id=288732
+b289187	track 1.0.3 security audit work and fixes for related security bugs	https://bugzilla.mozilla.org/show_bug.cgi?id=289187
+b289299	"Win2K hangs after pasting long text into <input type=""text"">"	https://bugzilla.mozilla.org/show_bug.cgi?id=289299
+b289847	"Closing the ""Security Warning"" will not prevent a secure site from loading."	https://bugzilla.mozilla.org/show_bug.cgi?id=289847
+b289966	firefox spawns instance of IE, installs spyware	https://bugzilla.mozilla.org/show_bug.cgi?id=289966
+b291314	content calling java methods causes trouble	https://bugzilla.mozilla.org/show_bug.cgi?id=291314
+b291645	Go Home can execute javascript in other sites	https://bugzilla.mozilla.org/show_bug.cgi?id=291645
+b291745	"cross site scripting if the user opens a link and then presses ""back"""	https://bugzilla.mozilla.org/show_bug.cgi?id=291745
+b291849	cannot access https: from firefox 1.nnn on Dell Latitude	https://bugzilla.mozilla.org/show_bug.cgi?id=291849
+b292499	"Addon Install feature can execute javascript in context of ""chrome"""	https://bugzilla.mozilla.org/show_bug.cgi?id=292499
+b292691	Full Remote Compromise using some of my previous vulns	https://bugzilla.mozilla.org/show_bug.cgi?id=292691	"
+docshell/base/nsDocShell.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=183002&action=diff		
+b294323	function onFullScreen() should check for untrusted events	https://bugzilla.mozilla.org/show_bug.cgi?id=294323
+b304388	Add hostname to title bar of windows that don't have location bars	https://bugzilla.mozilla.org/show_bug.cgi?id=304388	"
+xpfe/appshell/src/nsContentTreeOwner.cpp
+xpfe/global/resources/content/bindings/tabbrowser.xml
+content/html/document/src/nsHTMLDocument.cpp
+toolkit/content/widgets/tabbrowser.xml"	https://bugzilla.mozilla.org/attachment.cgi?id=197923&action=diff		
+b370555	URL bar not always updated when scripts interact with about:blank windows	https://bugzilla.mozilla.org/show_bug.cgi?id=370555	"
+browser/base/content/browser.js
+toolkit/content/widgets/tabbrowser.xml"	https://bugzilla.mozilla.org/attachment.cgi?id=255442&action=diff	"
+    if (url != ""about:blank"") {
+      if (location == ""about:blank"" || location == """") {   //second condition is for new tabs, otherwise
+"	"
+    if (url != ""about:blank"" || content.opener) {
+      if ((location == ""about:blank"" && !content.opener) 
+          || location == """") {   //second condition is for new tabs, otherwise"
+b394075	Resource Directory Traversal Vulnerability	https://bugzilla.mozilla.org/show_bug.cgi?id=394075
+b427293	"""Secure Connection Failed"" makes it difficult to work in the web hosting industry"	https://bugzilla.mozilla.org/show_bug.cgi?id=427293	"
+docshell/base/nsDocShell.cpp
+docshell/resources/content/netError.xhtml
+browser/app/profile/firefox.js
+mail/app/profile/all-thunderbird.js
+suite/browser/browser-prefs.js
+camino/resources/application/all-camino.js.in"	https://bugzilla.mozilla.org/attachment.cgi?id=318920&action=diff		
+b377245	[SoC] Link Fingerprints	https://bugzilla.mozilla.org/show_bug.cgi?id=377245	"
+toolkit/components/downloads/src/nsDownloadManager.cpp
+toolkit/components/downloads/src/nsDownloadManager.h"	https://bugzilla.mozilla.org/attachment.cgi?id=266400&action=diff		
+b556957	Address bar spoofing possible via window.open() + HTTP 204 responses or window.stop()	https://bugzilla.mozilla.org/show_bug.cgi?id=556957	"
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=441581&action=diff		
+b645564	"""view-source:"" on DV SSL does not update site identity button text -> spoofing"	https://bugzilla.mozilla.org/show_bug.cgi?id=645564	"
+a/browser/base/content/browser.js
+a/browser/base/content/test/Makefile.in
+a/browser/base/content/test/browser_bug420160.js"	https://bugzilla.mozilla.org/attachment.cgi?id=523174&action=diff	"
+      if (this._overrideService.hasMatchingOverride(this._lastLocation.hostname,
+
+      // Updating the tooltip value in those cases isn't critical.
+      // FIXME: Fixing bug 646690 would probably makes this check unnecessary
+      if (this._lastLocation.hostname &&
+          this._overrideService.hasMatchingOverride(this._lastLocation.hostname,"	"
+      // .hostname can return an empty string in some exceptional cases -
+      // hasMatchingOverride does not handle that, so avoid calling it."
+b286482	Show when users are visiting a site over SSL they haven't previously visited	https://bugzilla.mozilla.org/show_bug.cgi?id=286482
+b1100687	Fix browser_addCertException.js and browser_blockHPKP.js to work under e10s	https://bugzilla.mozilla.org/show_bug.cgi?id=1100687
+b1126675	Site identity data is not updated in some cases of weird certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=1126675	"
+a/browser/base/content/browser.js
+a/mobile/android/chrome/content/browser.js
+a/security/manager/pki/resources/content/editcerts.js
+a/security/manager/tools/genRootCAHashes.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8555893&action=diff	"
+    if (cert.subjectName) {
+
+      subjectName = cert.subjectName;
+    } catch (ex) { /* invalid certs can throw here. */ }
+    if (subjectName) {
+      cert.subjectName.split("","").forEach(function(v) {"	"
+    let subjectName;
+    try {
+      subjectName.split("","").forEach(function(v) {"
+b1234386	[META} Fixing createPrincipalFromReferer callers to support contextual identities.	https://bugzilla.mozilla.org/show_bug.cgi?id=1234386
+b1235655	add chromeutils for JS manipulation of origin attributes	https://bugzilla.mozilla.org/show_bug.cgi?id=1235655	"
+a/dom/base/ChromeUtils.cpp
+a/dom/base/ChromeUtils.h
+a/dom/webidl/ChromeUtils.webidl"	https://bugzilla.mozilla.org/attachment.cgi?id=8709583&action=diff		
+b1237078	live mark service needs to use createCodebasePrincipal and global user context id origin attribute	https://bugzilla.mozilla.org/show_bug.cgi?id=1237078	"
+a/toolkit/components/places/nsLivemarkService.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8717681&action=diff	"
+        loadingPrincipal: Services.scriptSecurityManager.createCodebasePrincipal(this.feedURI, {}),"	"
+        loadingPrincipal: Services.scriptSecurityManager.createCodebasePrincipal(this.feedURI, attrs),"
+b633691	Mitigate clickjacking of about:certerror	https://bugzilla.mozilla.org/show_bug.cgi?id=633691	"
+a/browser/components/certerror/content/aboutCertError.xhtml"	https://bugzilla.mozilla.org/attachment.cgi?id=578412&action=diff	"
+        // if this is a Strict-Transport-Security host and the cert
+        // is bad, don't allow overrides (STS Spec section 7.3).
+        if (getCSSClass() == ""badStsCert"") {
+"	"
+        // Disallow overrides if this is a Strict-Transport-Security
+        // host and the cert is bad (STS Spec section 7.3) or if the
+        // certerror is in a frame (bug 633691).
+        if (getCSSClass() == ""badStsCert"" || top !== self) {"
+b882977	Identity state of IDENTITY_MODE_UNKNOWN is set for about:home when a new window is created	https://bugzilla.mozilla.org/show_bug.cgi?id=882977	"
+a/browser/base/content/test/Makefile.in
+a/browser/base/content/test/browser_bug882977.js"	https://bugzilla.mozilla.org/attachment.cgi?id=772380&action=diff		
+b1215408	Observe pref change of packaged-app-developer-trusted-root	https://bugzilla.mozilla.org/show_bug.cgi?id=1215408
+b1224084	Create a website running package signing tools.	https://bugzilla.mozilla.org/show_bug.cgi?id=1224084
+b1225422	Update the PrivilegedPackageRoot certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=1225422	"
+a/netwerk/test/mochitests/signed_web_packaged_app.sjs
+a/netwerk/test/unit/test_packaged_app_utils.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8689385&action=diff	"
+var signedPackage = `manifest-signature: MIIF1AYJKoZIhvcNAQcCoIIFxTCCBcECAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCCA54wggOaMIICgqADAgECAgECMA0GCSqGSIb3DQEBCwUAMHMxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEkMCIGA1UEChMbRXhhbXBsZSBUcnVzdGVkIENvcnBvcmF0aW9uMRkwFwYDVQQDExBUcnVzdGVkIFZhbGlkIENBMB4XDTE1MDkxMDA4MDQzNVoXDTM1MDkxMDA4MDQzNVowdDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MSQwIgYDVQQKExtFeGFtcGxlIFRydXN0ZWQgQ29ycG9yYXRpb24xGjAYBgNVBAMTEVRydXN0ZWQgQ29ycCBDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAts8whjOzEbn/w1xkFJ67af7F/JPujBK91oyJekh2schIMzFau9pY8S1AiJQoJCulOJCJfUc8hBLKBZiGAkii+4Gpx6cVqMLe6C22MdD806Soxn8Dg4dQqbIvPuI4eeVKu5CEk80PW/BaFMmRvRHO62C7PILuH6yZeGHC4P7dTKpsk4CLxh/jRGXLC8jV2BCW0X+3BMbHBg53NoI9s1Gs7KGYnfOHbBP5wEFAa00RjHnubUaCdEBlC8Kl4X7p0S4RGb3rsB08wgFe9EmSZHIgcIm+SuVo7N4qqbI85qo2ulU6J8NN7ZtgMPHzrMhzgAgf/KnqPqwDIxnNmRNJmHTUYwIDAQABozgwNjAMBgNVHRMBAf8EAjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMDMA4GA1UdDwEB/wQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAQEAukH6cJUUj5faa8CuPCqrEa0PoLY4SYNnff9NI+TTAHkB9l+kOcFl5eo2EQOcWmZKYi7QLlWC4jy/KQYattO9FMaxiOQL4FAc6ZIbNyfwWBzZWyr5syYJTTTnkLq8A9pCKarN49+FqhJseycU+8EhJEJyP5pv5hLvDNTTHOQ6SXhASsiX8cjo3AY4bxA5pWeXuTZ459qDxOnQd+GrOe4dIeqflk0hA2xYKe3SfF+QlK8EO370B8Dj8RX230OATM1E3OtYyALe34KW3wM9Qm9rb0eViDnVyDiCWkhhQnw5yPg/XQfloug2itRYuCnfUoRt8xfeHgwz2Ymz8cUADn3KpTGCAf4wggH6AgEBMHgwczELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MSQwIgYDVQQKExtFeGFtcGxlIFRydXN0ZWQgQ29ycG9yYXRpb24xGTAXBgNVBAMTEFRydXN0ZWQgVmFsaWQgQ0ECAQIwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE1MTAyODExMTIwMlowIwYJKoZIhvcNAQkEMRYEFENKTXRUkdej+EPd/oKRhz0Cp13zMA0GCSqGSIb3DQEBAQUABIIBAFCr+i8cwTiwzzCVjzZZI2NAqu8dnYOAJjkhD02tJjBCbvehEhXW6pP/Gk8+oyx2zoV87zbw9xBGcEU9b3ulbggdFR56S3C3w+eTbeOXMcx7A8mn9vvsoMJm+/rkT4DgEUU1iaM7pdwH48CKJOnAZP5FkjRvpRBh8TgfcDbusXveYTwG5LVpDp8856+9FBzvZ7wLz9iWDvlT/EFxfWOnGduAJunQ9qQm+pWu5cvSTwWasCMYmiPRlsuBhU9Fx7LtlXIHtE2nYYQVMTMDE58z/mzT34W0bnneecrghHREhb90UvdlUZJ2q3Jahsa3718WUGPTp7ZYwYaPBy7ryoOoWSA=\r
+--7IYGY9UDJB\r
+--7IYGY9UDJB\r
+--7IYGY9UDJB\r
+--7IYGY9UDJB\r
+--7IYGY9UDJB\r
+--7IYGY9UDJB--`;"	"
+var signedPackage = `manifest-signature: MIIF1AYJKoZIhvcNAQcCoIIFxTCCBcECAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCCA54wggOaMIICgqADAgECAgEEMA0GCSqGSIb3DQEBCwUAMHMxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEkMCIGA1UEChMbRXhhbXBsZSBUcnVzdGVkIENvcnBvcmF0aW9uMRkwFwYDVQQDExBUcnVzdGVkIFZhbGlkIENBMB4XDTE1MTExOTAzMDEwNVoXDTM1MTExOTAzMDEwNVowdDELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MSQwIgYDVQQKExtFeGFtcGxlIFRydXN0ZWQgQ29ycG9yYXRpb24xGjAYBgNVBAMTEVRydXN0ZWQgQ29ycCBDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzPback9X7RRxKTc3/5o2vm9Ro6XNiSM9NPsN3djjCIVz50bY0rJkP98zsqpFjnLwqHeJigxyYoqFexRhRLgKrG10CxNl4rxP6CEPENjvj5FfbX/HUZpT/DelNR18F498yD95vSHcSrCc3JrjV3bKA+wgt11E4a0Ba95S1RuwtehZw1+Y4hO8nHpbSGfjD0BpluFY2nDoYAm+aWSrsmLuJsKLO8Xn2I1brZFJUynR3q1ujuDE9EJk1niDLfOeVgXM4AavJS5C0ZBHhAhR2W+K9NN97jpkpmHFqecTwDXB7rEhsyB3185cI7anaaQfHHfH5+4SD+cMDNtYIOSgLO06ZwIDAQABozgwNjAMBgNVHRMBAf8EAjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMDMA4GA1UdDwEB/wQEAwIHgDANBgkqhkiG9w0BAQsFAAOCAQEAlnVyLz5dPhS0ZhZD6qJOUzSo6nFwMxNX1m0oS37mevtuh0b0o1gmEuMw3mVxiAVkC2vPsoxBL2wLlAkcEdBPxGEqhBmtiBY3F3DgvEkf+/sOY1rnr6O1qLZuBAnPzA1Vnco8Jwf0DYF0PxaRd8yT5XSl5qGpM2DItEldZwuKKaL94UEgIeC2c+Uv/IOyrv+EyftX96vcmRwr8ghPFLQ+36H5nuAKEpDD170EvfWl1zs0dUPiqSI6l+hy5V14gl63Woi34L727+FKx8oatbyZtdvbeeOmenfTLifLomnZdx+3WMLkp3TLlHa5xDLwifvZtBP2d3c6zHp7gdrGU1u2WTGCAf4wggH6AgEBMHgwczELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MSQwIgYDVQQKExtFeGFtcGxlIFRydXN0ZWQgQ29ycG9yYXRpb24xGTAXBgNVBAMTEFRydXN0ZWQgVmFsaWQgQ0ECAQQwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE1MTExOTA2NTUyOFowIwYJKoZIhvcNAQkEMRYEFENKTXRUkdej+EPd/oKRhz0Cp13zMA0GCSqGSIb3DQEBAQUABIIBAGUh2vVwKqidBo7VEaEtjw3Uh1ElXLRPySu5Mmaw3yHgVhq4jAVnqm2Iwpe+C8d3Jb9Vd98NyvZfXFwu+dHKIEmOk0jQFJeO0kShaaWbK0awz08J9tSUz9WTLzNUAHiYgzNlN7j4S6fQ0d1nxW4+I0GSL6ojAsxWyeUW4QbFfuJe01/WlsVSuUBKwU5a1a7enb10OP84cIdXglm+PpKDyzk+sIyj/hyg57QXjvmLT5+QVGLUk4DmLZUGZKwGLeg4ofwGDqAH6Y+6f5wKo/sQkl7/L0n2wl4TsQwDtS7aE6Uu6uswp/du/OwLY6fpTChVfHqn8t96u/swJmMSvF/eq2g=\r
+--X3JDIZCX8G\r
+--X3JDIZCX8G\r
+--X3JDIZCX8G\r
+--X3JDIZCX8G\r
+--X3JDIZCX8G\r
+--X3JDIZCX8G--`;"
+b1227872	Don't include hidden files when packaging NSec packages.	https://bugzilla.mozilla.org/show_bug.cgi?id=1227872
+b1228310	NSec online packaging tool can't handle zip created by OS X	https://bugzilla.mozilla.org/show_bug.cgi?id=1228310
+b1239559	Reuse SRI code in NSec verification	https://bugzilla.mozilla.org/show_bug.cgi?id=1239559
+b989875	"[e10s] ""Untrusted Connection"" page's ""Add Exception"" button does nothing"	https://bugzilla.mozilla.org/show_bug.cgi?id=989875	"
+a/browser/base/content/browser.js
+a/browser/base/content/content.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8449625&action=diff	"
+ * or from about:newtab
+
+  handleEvent: function BrowserOnClick_handleEvent(aEvent) {
+    if (!aEvent.isTrusted || // Don't trust synthetic events
+        aEvent.button == 2) {
+
+    mm.addMessageListener(""Browser:NetworkError"", this);
+    dump(""*************** init\n"");
+  },
+
+  uninit: function () {
+    let mm = window.messageManager;
+    mm.removeMessageListener(""Browser:CertExceptionError"", this);
+    mm.removeMessageListener(""Browser:SiteBlockedError"", this);
+    mm.removeMessageListener(""Browser:NetworkError"", this);
+    dump(""*************** uninit\n"");
+  },
+
+  handleEvent: function (event) {
+    if (!event.isTrusted || // Don't trust synthetic events
+        event.button == 2) {
+    let originalTarget = aEvent.originalTarget;
+    // If the event came from an ssl error page, it is probably either the ""Add
+    // Exception…"" or ""Get me out of here!"" button
+    if (ownerDoc.documentURI.startsWith(""about:certerror"")) {
+      this.onAboutCertError(originalTarget, ownerDoc);
+    }
+    else if (ownerDoc.documentURI.startsWith(""about:blocked"")) {
+      this.onAboutBlocked(originalTarget, ownerDoc);
+    }
+    else if (ownerDoc.documentURI.startsWith(""about:neterror"")) {
+      this.onAboutNetError(originalTarget, ownerDoc);
+    }
+    else if (gMultiProcessBrowser &&
+             ownerDoc.documentURI.toLowerCase() == ""about:newtab"") {
+      this.onE10sAboutNewTab(aEvent, ownerDoc);
+      this.onAboutTabCrashed(aEvent, ownerDoc);
+    }
+  },
+
+  onAboutCertError: function BrowserOnClick_onAboutCertError(aTargetElm, aOwnerDoc) {
+    let elmId = aTargetElm.getAttribute(""id"");
+
+        this.onAboutCertError(msg.target, msg.json.elementId,
+                              msg.json.isTopFrame, msg.json.location);
+      break;
+      case ""Browser:SiteBlockedError"":
+        this.onAboutBlocked(msg.json.elementId, msg.json.isMalware,
+                            msg.json.isTopFrame, msg.json.location);
+      break;
+      case ""Browser:NetworkError"":
+        // Reset network state, the error page will refresh on its own.
+        Services.io.offline = false;
+      break;
+    }
+  },
+
+  onAboutCertError: function (browser, elementId, isTopFrame, location) {
+    let isTopFrame = (aOwnerDoc.defaultView.parent === aOwnerDoc.defaultView);
+
+    switch (elmId) {
+              params.location = aOwnerDoc.location.href;
+          aOwnerDoc.location.reload();
+  onAboutBlocked: function BrowserOnClick_onAboutBlocked(aTargetElm, aOwnerDoc) {
+    let elmId = aTargetElm.getAttribute(""id"");
+
+    let bucketName = isMalware ? ""WARNING_MALWARE_PAGE_"":""WARNING_PHISHING_PAGE_"";
+    let isIframe = (aOwnerDoc.defaultView.parent === aOwnerDoc.defaultView);
+    bucketName += isIframe ? ""TOP_"" : ""FRAME_"";
+
+    switch (elmId) {
+            reportURL += aOwnerDoc.location.href;
+  onE10sAboutNewTab: function(aEvent, aOwnerDoc) {
+    let isTopFrame = (aOwnerDoc.defaultView.parent === aOwnerDoc.defaultView);
+    if (!isTopFrame || aEvent.button != 0) {
+    let anchorTarget = aEvent.originalTarget.parentNode;
+      aEvent.preventDefault();
+  onAboutTabCrashed: function(aEvent, aOwnerDoc) {
+    let isTopFrame = (aOwnerDoc.defaultView.parent === aOwnerDoc.defaultView);
+    let button = aEvent.originalTarget;
+      if (aOwnerDoc.getElementById(""checkSendReport"").checked) {
+        let browser = gBrowser.getBrowserForDocument(aOwnerDoc);
+  ignoreWarningButton: function BrowserOnClick_ignoreWarningButton(aIsMalware) {
+    if (aIsMalware) {"	"
+ * or from about:newtab or from remote error pages that invoke
+ * us via async messaging.
+  init: function () {
+    let mm = window.messageManager;
+    mm.addMessageListener(""Browser:CertExceptionError"", this);
+    mm.addMessageListener(""Browser:SiteBlockedError"", this);
+    let originalTarget = event.originalTarget;
+    if (gMultiProcessBrowser &&
+        ownerDoc.documentURI.toLowerCase() == ""about:newtab"") {
+      this.onE10sAboutNewTab(event, ownerDoc);
+
+      this.onAboutTabCrashed(event, ownerDoc);
+    }
+  },
+
+  receiveMessage: function (msg) {
+    switch (msg.name) {
+      case ""Browser:CertExceptionError"":
+    switch (elementId) {
+
+              params.location = location;
+          browser.reload();
+  onAboutBlocked: function (elementId, isMalware, isTopFrame, location) {
+    // Depending on what page we are displaying here (malware/phishing)
+    // use the right strings and links for each.
+    bucketName += isTopFrame ? ""TOP_"" : ""FRAME_"";
+    switch (elementId) {
+
+            reportURL += location;
+  onE10sAboutNewTab: function(event, ownerDoc) {
+    let isTopFrame = (ownerDoc.defaultView.parent === ownerDoc.defaultView);
+    if (!isTopFrame || event.button != 0) {
+    let anchorTarget = event.originalTarget.parentNode;
+      event.preventDefault();
+  onAboutTabCrashed: function(event, ownerDoc) {
+    let isTopFrame = (ownerDoc.defaultView.parent === ownerDoc.defaultView);
+    let button = event.originalTarget;
+      if (ownerDoc.getElementById(""checkSendReport"").checked) {
+        let browser = gBrowser.getBrowserForDocument(ownerDoc);
+  ignoreWarningButton: function (isMalware) {
+    if (isMalware) {"
+b305269	When Firefox is not already running, it accepts chrome:// URLs without -chrome	https://bugzilla.mozilla.org/show_bug.cgi?id=305269	"
+browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=193392&action=diff	"
+    if (makeURL(uriToLoad).schemeIs(""chrome"")) {"	"
+    if (makeURI(uriToLoad).schemeIs(""chrome"")) {"
+b344730	RSA keygen broken	https://bugzilla.mozilla.org/show_bug.cgi?id=344730
+b453045	Create about:config pref for NSS libPKIX and shared DB	https://bugzilla.mozilla.org/show_bug.cgi?id=453045
+b271051	Address bar should use another color when lock icon is broken (https page with mixed content)	https://bugzilla.mozilla.org/show_bug.cgi?id=271051	"
+browser/themes/pinstripe/browser/browser.css
+browser/themes/winstripe/browser/browser.css"	https://bugzilla.mozilla.org/attachment.cgi?id=192251&action=diff	"
+#urlbar[level=""low""] > .autocomplete-textbox-container,
+#urlbar[level=""broken""] > .autocomplete-textbox-container
+#urlbar[level=""low""] > .autocomplete-history-dropmarker,
+#urlbar[level=""broken""] > .autocomplete-history-dropmarker"	"
+#urlbar[level=""low""] > .autocomplete-textbox-container
+
+#urlbar[level=""low""] > .autocomplete-history-dropmarker
+"
+b1195881	Set userContextId on the docShell for new remote (e10s) tabs	https://bugzilla.mozilla.org/show_bug.cgi?id=1195881	"
+a/browser/components/contextualidentity/test/browser/browser.ini
+a/dom/ipc/TabChild.cpp
+a/netwerk/ipc/NeckoParent.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=8709862&action=diff		
+b583175	Add a security delay to the main action of PopupNotifications	https://bugzilla.mozilla.org/show_bug.cgi?id=583175	"
+a/browser/base/content/test/browser_popupNotification.js
+a/build/automation.py.in
+a/modules/libpref/src/init/all.js
+a/toolkit/components/telemetry/Histograms.json
+a/toolkit/content/PopupNotifications.jsm"	https://bugzilla.mozilla.org/attachment.cgi?id=703232&action=diff		
+b325370	[security] Insecure defaults for menu Tools => Options => [privacy] tab	https://bugzilla.mozilla.org/show_bug.cgi?id=325370
+b285440	Firefox UI to clear SSL session	https://bugzilla.mozilla.org/show_bug.cgi?id=285440	"
+browser/app/profile/firefox.js
+browser/base/content/sanitize.js
+browser/base/content/sanitize.xul
+browser/components/preferences/sanitize.xul
+browser/locales/en-US/chrome/browser/sanitize.dtd
+browser/locales/en-US/chrome/browser/preferences/sanitize.dtd"	https://bugzilla.mozilla.org/attachment.cgi?id=190517&action=diff		
+b291651	Address bar accepts dragged javascript urls	https://bugzilla.mozilla.org/show_bug.cgi?id=291651	"
+browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=193502&action=diff	"
+        // XXXBlake Workaround caret crash when you try to set the textbox's value on dropping
+        setTimeout(function(u) { gURLBar.value = u; handleURLBarCommand(); }, 0, url);
+
+          const secMan = Components.classes[""@mozilla.org/scriptsecuritymanager;1""]
+                                   .getService(Components.interfaces.nsIScriptSecurityManager);
+          const nsIScriptSecMan = Components.interfaces.nsIScriptSecurityManager;
+          secMan.checkLoadURI(gBrowser.currentURI, uri, nsIScriptSecMan.DISALLOW_SCRIPT_OR_DATA);
+          handleURLBarCommand();
+        } catch (ex) {}
+      var uri = xferData[0] ? xferData[0] : xferData[1];
+      if (uri) {
+
+
+
+        const nsIScriptSecMan = Components.interfaces.nsIScriptSecurityManager;
+        secMan.checkLoadURI(gBrowser.currentURI, uri, nsIScriptSecMan.DISALLOW_SCRIPT_OR_DATA);
+      }"	"
+        try {
+          gURLBar.value = url;
+          var uri = makeURI(gURLBar.value);
+      var url = xferData[0] ? xferData[0] : xferData[1];
+      try {
+        var uri = makeURI(url);
+        const secMan = Components.classes[""@mozilla.org/scriptsecuritymanager;1""]
+                                 .getService(Components.interfaces.nsIScriptSecurityManager);
+      } catch (ex) {}"
+b307027	Going back from secure page to error page does not clear yellow bar	https://bugzilla.mozilla.org/show_bug.cgi?id=307027	"
+mozilla/docshell/base/nsDocShell.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=198362&action=diff	"
+    if (mUseErrorPages && aURI) {"	"
+    if (mUseErrorPages && aURI && aFailedChannel) {"
+b1146832	Ugly wrapping of label for submission status of certificate pinning errors in localizations with texts longer than English	https://bugzilla.mozilla.org/show_bug.cgi?id=1146832	"
+a/browser/base/content/aboutNetError.xhtml
+a/browser/base/content/content.js
+a/browser/themes/shared/aboutNetError.css"	https://bugzilla.mozilla.org/attachment.cgi?id=8597933&action=diff	"
+        <p>&errorReporting.longDesc;</p>
+        <p>
+          <input type=""checkbox"" id=""automaticallyReportInFuture"" />
+          <label for=""automaticallyReportInFuture"" id=""automaticallyReportInFuture"">&errorReporting.automatic;</label>
+        </p>
+        <a href=""https://support.mozilla.org/kb/tls-error-reports"" id=""learnMoreLink"" target=""new"">&errorReporting.learnMore;</a>
+        <span id=""reportingState"">
+          <button id=""reportCertificateError"">&errorReporting.report;</button>
+          <button id=""reportCertificateErrorRetry"">&errorReporting.tryAgain;</button>
+          <span id=""reportSendingMessage"">&errorReporting.sending;</span>
+          <span id=""reportSentMessage"">&errorReporting.sent;</span>
+        </span>
+
+            <span id=""reportSentMessage"">&errorReporting.sent;</span>
+          </span>
+        </div>"	"
+        <div id=""certificateErrorReportingDescription"">
+          <p>&errorReporting.longDesc;</p>
+          <p>
+            <input type=""checkbox"" id=""automaticallyReportInFuture"" />
+            <label for=""automaticallyReportInFuture"" id=""automaticallyReportInFuture"">&errorReporting.automatic;</label>
+          </p>
+        </div>
+        <div id=""errorStatePanel"">
+          <a href=""https://support.mozilla.org/kb/tls-error-reports"" id=""learnMoreLink"" target=""new"">&errorReporting.learnMore;</a>
+          <span id=""reportingState"">
+            <button id=""reportCertificateError"">&errorReporting.report;</button>
+            <button id=""reportCertificateErrorRetry"">&errorReporting.tryAgain;</button>
+            <span id=""reportSendingMessage"">&errorReporting.sending;</span>"
+b1089808	[UX] Revise the error page shown for SSLv3	https://bugzilla.mozilla.org/show_bug.cgi?id=1089808
+b1130893	Wrong principal is used for nsChannelClassifier checks (tracking Protection blocks videos on facebook, and gifs-reencoded-as-h.264 on Twitter)	https://bugzilla.mozilla.org/show_bug.cgi?id=1130893	"
+a/netwerk/base/nsChannelClassifier.cpp
+a/netwerk/protocol/http/nsHttpChannel.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=8563913&action=diff	"
+    rv = securityManager->GetChannelResultPrincipal(mChannel,
+                                                    getter_AddRefs(principal));"	"
+    rv = securityManager->GetChannelURIPrincipal(mChannel, getter_AddRefs(principal));
+"
+b657267	possible for unsignend script to call functions inside signed scripts (jar)	https://bugzilla.mozilla.org/show_bug.cgi?id=657267	"
+a/caps/idl/nsIPrincipal.idl
+a/caps/include/nsPrincipal.h
+a/caps/src/nsNullPrincipal.cpp
+a/caps/src/nsPrincipal.cpp
+a/caps/src/nsSystemPrincipal.cpp
+a/js/src/xpconnect/src/nsXPConnect.cpp
+a/js/src/xpconnect/src/xpcinlines.h
+a/js/src/xpconnect/src/xpcprivate.h
+a/js/src/xpconnect/wrappers/AccessCheck.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=533639&action=diff	"
+[scriptable, uuid(799ab95c-0038-4e0f-b705-74c21f185bb5)]"	"
+[scriptable, uuid(B406A2DB-E547-4C95-B8E2-AD09ECB54CE0)]"
+b320101	meta security bug, per chofmann's question	https://bugzilla.mozilla.org/show_bug.cgi?id=320101
+b292182	crypted side (https) blocks access ot other sides in the other opend tabs	https://bugzilla.mozilla.org/show_bug.cgi?id=292182
+b292835	virus infection by simply opening a malicious web page	https://bugzilla.mozilla.org/show_bug.cgi?id=292835
+b293640	"Unsecure?: ""No common encryption algorithms"""	https://bugzilla.mozilla.org/show_bug.cgi?id=293640
+b294006	digest auth spreads across multiple instances of the browser	https://bugzilla.mozilla.org/show_bug.cgi?id=294006
+b294472	Able to login my GMAIL account without having to enter USR/PWD	https://bugzilla.mozilla.org/show_bug.cgi?id=294472
+b294577	Firefox 1.0.4 allows javascript to open windows with no titlebar.	https://bugzilla.mozilla.org/show_bug.cgi?id=294577
+b295190	SSL Client Certificate missing in Firefox / Java-Plugin	https://bugzilla.mozilla.org/show_bug.cgi?id=295190
+b295326	Secure Site indicator not shown after going back and forward	https://bugzilla.mozilla.org/show_bug.cgi?id=295326
+b295893	Suggestion for Security Patch Level version be mainained in Firefox, to avoid problems like the 1.0.4 update on Ubuntu Linux	https://bugzilla.mozilla.org/show_bug.cgi?id=295893
+b296552	Several viruses were loaded into my computer on this website	https://bugzilla.mozilla.org/show_bug.cgi?id=296552
+b297345	Https password remembering && offering	https://bugzilla.mozilla.org/show_bug.cgi?id=297345
+b297391	Certificate warning displays in front, regardless which tab is in view	https://bugzilla.mozilla.org/show_bug.cgi?id=297391
+b297447	getting popups that are written in java script and are bypassing the blocker disabled java script	https://bugzilla.mozilla.org/show_bug.cgi?id=297447
+b297866	always a red x on lock icon when visiting secured https pages	https://bugzilla.mozilla.org/show_bug.cgi?id=297866
+b298539	Memory dump of Firefox reveals sensitive information, including authentication credentials	https://bugzilla.mozilla.org/show_bug.cgi?id=298539
+b298569	a way to alias certificates or name them for easyer distinguishing	https://bugzilla.mozilla.org/show_bug.cgi?id=298569
+b298635	a window with your home page keeps popping up every few minutes without my input	https://bugzilla.mozilla.org/show_bug.cgi?id=298635
+b298813	some scumbag ad-spammer found a way to evade the popup blocker	https://bugzilla.mozilla.org/show_bug.cgi?id=298813
+b299608	Mozilla and recent Java allow infection of machine with Trojan.ByteVerify at this URL	https://bugzilla.mozilla.org/show_bug.cgi?id=299608
+b303533	InActiveX - secure (sandboxed) ActiveX implementation for Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=303533
+b305093	Firefox caches login information even with logout or reopening browser	https://bugzilla.mozilla.org/show_bug.cgi?id=305093
+b306721	Application Hijacking has been detected by my Sygate firewall.	https://bugzilla.mozilla.org/show_bug.cgi?id=306721
+b307935	"Cookie ""block"" exceptions are not enforced"	https://bugzilla.mozilla.org/show_bug.cgi?id=307935
+b308414	blocks cookies on 3 out of 4 xp users specifically yahoo mail	https://bugzilla.mozilla.org/show_bug.cgi?id=308414
+b308708	rejection of copied random validation code	https://bugzilla.mozilla.org/show_bug.cgi?id=308708
+b309161	Page can trap user completely	https://bugzilla.mozilla.org/show_bug.cgi?id=309161
+b309302	Inconsistent naming of NT registry entries (e.g. some in HKEY_CURRENT_USER\Netscape\Netscape_Navigator)	https://bugzilla.mozilla.org/show_bug.cgi?id=309302
+b309579	chrome protocol: access from http:// without security error	https://bugzilla.mozilla.org/show_bug.cgi?id=309579
+b309942	Can no longer allow certain sites to access clipboard (cut/copy/paste) in Firefox 1.0.7	https://bugzilla.mozilla.org/show_bug.cgi?id=309942
+b310522	error establishing encrypted connection to signin.ebay.com error code 5981	https://bugzilla.mozilla.org/show_bug.cgi?id=310522
+b312559	they just added 128 bit encryption	https://bugzilla.mozilla.org/show_bug.cgi?id=312559
+b312806	Popup blocker fails to block popup	https://bugzilla.mozilla.org/show_bug.cgi?id=312806
+b313590	Can't access security features for secure sites such as webmail.	https://bugzilla.mozilla.org/show_bug.cgi?id=313590
+b314054	Browsers throws an error message for any secured websites. i.e., https://	https://bugzilla.mozilla.org/show_bug.cgi?id=314054
+b314344	"""Main Password""-dialog crashes upon submit"	https://bugzilla.mozilla.org/show_bug.cgi?id=314344
+b314573	chrome javascript priviledge vulnerability with extensions	https://bugzilla.mozilla.org/show_bug.cgi?id=314573
+b317603	Certificate Revocation List (CRL) is not valid.	https://bugzilla.mozilla.org/show_bug.cgi?id=317603
+b317668	valid certificate not selected in a client authentication	https://bugzilla.mozilla.org/show_bug.cgi?id=317668
+b319624	New Firefox 1.5 popup blocker fails to block popup windows	https://bugzilla.mozilla.org/show_bug.cgi?id=319624
+b319913	firefox and selinux	https://bugzilla.mozilla.org/show_bug.cgi?id=319913
+b320522	Allow whitelist of javascript by site	https://bugzilla.mozilla.org/show_bug.cgi?id=320522
+b322758	Got an executable downloaded without consent and even gets executed!	https://bugzilla.mozilla.org/show_bug.cgi?id=322758
+b324047	Exceptions - sites added to list are duplicated	https://bugzilla.mozilla.org/show_bug.cgi?id=324047
+b324225	java applet not display as expected	https://bugzilla.mozilla.org/show_bug.cgi?id=324225
+b327026	Errorsafe	https://bugzilla.mozilla.org/show_bug.cgi?id=327026
+b328525	Security manager allows <script> nodes from other domains to be loaded	https://bugzilla.mozilla.org/show_bug.cgi?id=328525
+b329911	Repeated password request in apparent infinate loop requires forced shutdown of applicable Firefox window	https://bugzilla.mozilla.org/show_bug.cgi?id=329911
+b329986	Complete browser crash if I close the browser and select: Clear all private data. It won't re-start, displays the same message, and offers to send an error report to Microsoft.S	https://bugzilla.mozilla.org/show_bug.cgi?id=329986
+b335556	cant create certificate request using GemSAFE USB crypto device	https://bugzilla.mozilla.org/show_bug.cgi?id=335556
+b335906	MS03-026_RPC_DCOM_EXPLOIT Issue when accessing above sit.	https://bugzilla.mozilla.org/show_bug.cgi?id=335906
+b336327	Auto update enabled without my auth, unknown website added to approved software source list.	https://bugzilla.mozilla.org/show_bug.cgi?id=336327
+b336493	A popup created in one frame can target another sibling frame within the same frameset even though the frames may not belong to the same domain	https://bugzilla.mozilla.org/show_bug.cgi?id=336493
+b337316	netflix sets itself to Allow in Exceptions without permission from Allow sites to set Cookies repeatedly even after deletion of Permission in Exceptions	https://bugzilla.mozilla.org/show_bug.cgi?id=337316
+b338093	Flash Pupups are a new threat and damn anoying	https://bugzilla.mozilla.org/show_bug.cgi?id=338093
+b338539	Textarea doesn't show complete predefined content and POSTS truncated value	https://bugzilla.mozilla.org/show_bug.cgi?id=338539
+b338749	Firefox sends unexpected outgoing http requests to several sites.	https://bugzilla.mozilla.org/show_bug.cgi?id=338749
+b339928	Alert in one tab while another tab loads can cause wrong URL to be displayed in address bar	https://bugzilla.mozilla.org/show_bug.cgi?id=339928
+b342495	Random Links advertisement links ad themselfs to the bookmark toolbar	https://bugzilla.mozilla.org/show_bug.cgi?id=342495
+b347549	Repeated and persistant Prompt for username and password	https://bugzilla.mozilla.org/show_bug.cgi?id=347549
+b349039	Trendmicro virus scan is crashing in Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=349039
+b349412	Website Installs Adware.CDT Without Authorization	https://bugzilla.mozilla.org/show_bug.cgi?id=349412
+b351035	Exploit of Firefox or Tab Mix Plus: Web site makes itself start page, and/or loads itself in tab	https://bugzilla.mozilla.org/show_bug.cgi?id=351035
+b353158	after downloading CRL over SSL (https) the lock is shown on non-SSL page	https://bugzilla.mozilla.org/show_bug.cgi?id=353158
+b355384	FireFox NPSWF32.dll Memory Corruption Vulnerability	https://bugzilla.mozilla.org/show_bug.cgi?id=355384
+b356263	Firefox hangs instead of handling certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=356263
+b356293	Configurated policies are ignored	https://bugzilla.mozilla.org/show_bug.cgi?id=356293
+b356644	trojan	https://bugzilla.mozilla.org/show_bug.cgi?id=356644
+b357069	ALERT: You cannot connect to . . .because SSL is disabled.	https://bugzilla.mozilla.org/show_bug.cgi?id=357069
+b357839	/tmp/.pip_p12tmp prevents other users from importing ssl certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=357839
+b357841	NS_ERROR_DOM_SECURITY_ERR thrown when using a javascript anchor	https://bugzilla.mozilla.org/show_bug.cgi?id=357841
+b357843	"The ""Allow sites to set cookies"" setting does not ""stick"" between sessions"	https://bugzilla.mozilla.org/show_bug.cgi?id=357843
+b359609	Crash immediately after submitting HTTP BASIC authentication	https://bugzilla.mozilla.org/show_bug.cgi?id=359609
+b359641	"Add ""Bookmarks"" to ""Clear Private Data"" feature"	https://bugzilla.mozilla.org/show_bug.cgi?id=359641
+b359787	After calling this site FireFox crashes and code is executed	https://bugzilla.mozilla.org/show_bug.cgi?id=359787
+b360107	"""Clear Private Data"" dialog on exit too easy to miss (should appear earlier and/or time out)"	https://bugzilla.mozilla.org/show_bug.cgi?id=360107
+b360341	as soon as I visit the page firefox crashes	https://bugzilla.mozilla.org/show_bug.cgi?id=360341
+b361086	wireless connectivity- unable to access to subsequent web pages	https://bugzilla.mozilla.org/show_bug.cgi?id=361086
+b361280	difference between HttpRequest.responseText and HttpRequest.responseXML permission denied	https://bugzilla.mozilla.org/show_bug.cgi?id=361280
+b361407	Virus installation	https://bugzilla.mozilla.org/show_bug.cgi?id=361407
+b363231	master password corrupted	https://bugzilla.mozilla.org/show_bug.cgi?id=363231
+b364076	To enter an account of hotmail without knowing the name user and the password - keywords: (hotmail user password nonorder security problem log in login)	https://bugzilla.mozilla.org/show_bug.cgi?id=364076
+b364404	Huge download of undefined data	https://bugzilla.mozilla.org/show_bug.cgi?id=364404
+b365025	After security update 2.0.0.1 installs Firefox cannot connect to any site	https://bugzilla.mozilla.org/show_bug.cgi?id=365025
+b374504	"HTTP Authentication: ""@"" (at) symbol in username works once, fails second time"	https://bugzilla.mozilla.org/show_bug.cgi?id=374504
+b378318	Remote command execution in Java through Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=378318
+b381572	RFE: Allow users to override the “Secure” attribute of cookies from “not set” to “set” (via the GUI)	https://bugzilla.mozilla.org/show_bug.cgi?id=381572
+b384273	Could not establish an encrypted connection because certificate is either invalid or corrupted. Error code: -8151	https://bugzilla.mozilla.org/show_bug.cgi?id=384273
+b384995	Phising vulnerability in userinfo for websites over HTTP	https://bugzilla.mozilla.org/show_bug.cgi?id=384995
+b391083	Importing cert in linux don't ask for master password	https://bugzilla.mozilla.org/show_bug.cgi?id=391083
+b391217	SSL Problem	https://bugzilla.mozilla.org/show_bug.cgi?id=391217
+b392763	Visit the URL http://67.165.139.235/ and my firefox crashes for no reason	https://bugzilla.mozilla.org/show_bug.cgi?id=392763
+b392885	"Whitelist blocked extension install can attempt to add ""install"" to the whitelist"	https://bugzilla.mozilla.org/show_bug.cgi?id=392885
+b393567	Enhancement bug (couldn't find that as a category)..	https://bugzilla.mozilla.org/show_bug.cgi?id=393567
+b394824	scripts can automatically submit file uploads selected by the user	https://bugzilla.mozilla.org/show_bug.cgi?id=394824
+b399499	using proxy, all cookies are sending	https://bugzilla.mozilla.org/show_bug.cgi?id=399499
+b400551	mailto link in html img src tag unexpectedly processed	https://bugzilla.mozilla.org/show_bug.cgi?id=400551
+b401307	HOSTILE APPLETS WILL STEAL AND/OR DESTROY YOUR DATA!	https://bugzilla.mozilla.org/show_bug.cgi?id=401307
+b401335	Javascript forces virus download	https://bugzilla.mozilla.org/show_bug.cgi?id=401335
+b401560	Should ssl indicators disappear on location-bar-edit?	https://bugzilla.mozilla.org/show_bug.cgi?id=401560
+b404058	Deleting cookies results in automatic entry on blocked site list -- should be selective	https://bugzilla.mozilla.org/show_bug.cgi?id=404058
+b406018	"change location of ""Get me out of here!"" button"	https://bugzilla.mozilla.org/show_bug.cgi?id=406018
+b406142	Will not access the net	https://bugzilla.mozilla.org/show_bug.cgi?id=406142
+b406740	same origin policy is incorrectly applied to connection error page	https://bugzilla.mozilla.org/show_bug.cgi?id=406740
+b408865	Yellow location bar background is not explained or visually linked to something understandable	https://bugzilla.mozilla.org/show_bug.cgi?id=408865
+b409597	Online Banking TAB - Different Security	https://bugzilla.mozilla.org/show_bug.cgi?id=409597
+b410121	Firefox will follow a 301 redirect to another domain while looking for favicon.ico	https://bugzilla.mozilla.org/show_bug.cgi?id=410121
+b410240	Invalid certificate error exceptions should not be permanent by default.	https://bugzilla.mozilla.org/show_bug.cgi?id=410240
+b416356	Does not accept domain cookies issued by subdomains sites like bugzilla.mozilla.org cannot issue a mozilla.org cookie	https://bugzilla.mozilla.org/show_bug.cgi?id=416356
+b421826	Certificate hostname mismatch error page should link to the site for which the cert is valid	https://bugzilla.mozilla.org/show_bug.cgi?id=421826
+b425179	repetitive need to confirm use a certificate of security	https://bugzilla.mozilla.org/show_bug.cgi?id=425179
+b430096	NS_ERROR_NOT_AVAILABLE [nsIXMLHttpRequest.statusText (nsBlocklistService.js)	https://bugzilla.mozilla.org/show_bug.cgi?id=430096
+b430790	Users can be tricked into thinking sites are encrypted with new visual cues added by bug 417844	https://bugzilla.mozilla.org/show_bug.cgi?id=430790
+b431330	Automatically blocked sites not un-blockable	https://bugzilla.mozilla.org/show_bug.cgi?id=431330
+b431827	Exceptions for invalid SSL certificates are too easy to add	https://bugzilla.mozilla.org/show_bug.cgi?id=431827
+b433148	Trend Micro reports sb.google.com attempting to read my credit card number	https://bugzilla.mozilla.org/show_bug.cgi?id=433148
+b434544	Cross Scripting between signed and unsigned Web Pages broke	https://bugzilla.mozilla.org/show_bug.cgi?id=434544
+b435212	going to a secure login site crashes the browser	https://bugzilla.mozilla.org/show_bug.cgi?id=435212
+b435429	Invalid Security Certicate when connecting to http://www.sixxs.net	https://bugzilla.mozilla.org/show_bug.cgi?id=435429
+b435453	"Please add option to turn off certification on broken sites rather than display ""add an exception"" dialog"	https://bugzilla.mozilla.org/show_bug.cgi?id=435453
+b435544	"Unknown Security Certificate Failure -- reason -- ""unknown"""	https://bugzilla.mozilla.org/show_bug.cgi?id=435544
+b436221	firefox 3 runs much slower as an untrusted X11 application than firefox 2	https://bugzilla.mozilla.org/show_bug.cgi?id=436221
+b436295	SSL Certificate from Starfield Technologies not accepted as valid	https://bugzilla.mozilla.org/show_bug.cgi?id=436295
+b436999	Error while using an invalid security certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=436999
+b437317	You need a Bug Report for Dummies section!!!	https://bugzilla.mozilla.org/show_bug.cgi?id=437317
+b437773	Fx 3.0 rc2 will not allow temporary https access to a self-signed certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=437773
+b439586	Smartcard authentification	https://bugzilla.mozilla.org/show_bug.cgi?id=439586
+b439830	Too many steps to temporarily allow security exception for invalid certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=439830
+b440551	"Privacy tab under ""Tools/Options"" completely inactive"	https://bugzilla.mozilla.org/show_bug.cgi?id=440551
+b441103	Option to ignore the malware warning for a certain page/site or ignore for whole session	https://bugzilla.mozilla.org/show_bug.cgi?id=441103
+b441211	the 'no site info' tooltip from location bar can be less intrusive, more informative	https://bugzilla.mozilla.org/show_bug.cgi?id=441211	"
+a/browser/locales/en-US/chrome/browser/browser.dtd
+a/browser/locales/en-US/chrome/browser/browser.properties
+a/browser/locales/en-US/chrome/browser/pageInfo.properties"	https://bugzilla.mozilla.org/attachment.cgi?id=328333&action=diff	"
+<!ENTITY identity.unverifiedsite2 ""This web site does not supply identity information."">"	"
+<!ENTITY identity.unverifiedsite2 ""Unverified."">"
+b441735	Trojan.Vundo infection	https://bugzilla.mozilla.org/show_bug.cgi?id=441735
+b441745	Logoff from american express site in FIrefox 3 not proper	https://bugzilla.mozilla.org/show_bug.cgi?id=441745
+b441811	"Invalid IDN characters show up as ""?"" and can be used to spoof the address bar"	https://bugzilla.mozilla.org/show_bug.cgi?id=441811
+b441944	Virus	https://bugzilla.mozilla.org/show_bug.cgi?id=441944
+b441958	Browsing History For Address Bar Is Not Cleared/Cannot Be Cleared	https://bugzilla.mozilla.org/show_bug.cgi?id=441958
+b442020	Warn if submitting password to non-ssl site.	https://bugzilla.mozilla.org/show_bug.cgi?id=442020
+b442658	Invalid certificates warning should be configurable	https://bugzilla.mozilla.org/show_bug.cgi?id=442658
+b442977	HTTPS per session cookies not being deleted when browser is closed	https://bugzilla.mozilla.org/show_bug.cgi?id=442977
+b446671	Major update fx2 -> Fx3: Security Warning prefs are overwritten to default Fx3	https://bugzilla.mozilla.org/show_bug.cgi?id=446671
+b448490	blocked site error page doesnt work with javascipt turned off	https://bugzilla.mozilla.org/show_bug.cgi?id=448490
+b449037	Display a two-dimensional graph regarding security status when accessing SSL Encrypted sites	https://bugzilla.mozilla.org/show_bug.cgi?id=449037
+b449038	"JavaScript component does not have a method named: ""handleEvent""' when calling method: [nsIDOMEventListener::handleEvent]"	https://bugzilla.mozilla.org/show_bug.cgi?id=449038
+b449918	The above URL continually opens in a new tab. Over and Over again.	https://bugzilla.mozilla.org/show_bug.cgi?id=449918
+b450141	Changing document.domain doesn't affect XMLHttpRequest	https://bugzilla.mozilla.org/show_bug.cgi?id=450141
+b450968	I can't access gnome bugzilla because of a bad certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=450968
+b451543	Web page authentication confirmation error	https://bugzilla.mozilla.org/show_bug.cgi?id=451543
+b452936	"double-clicking history-list-entries connects to ""secure"" websites"	https://bugzilla.mozilla.org/show_bug.cgi?id=452936
+b456034	problem with a security certificate that stops access to a site/device	https://bugzilla.mozilla.org/show_bug.cgi?id=456034
+b456946	Error when try to access Gmail	https://bugzilla.mozilla.org/show_bug.cgi?id=456946
+b459650	Password manager fails at second trial	https://bugzilla.mozilla.org/show_bug.cgi?id=459650
+b461455	Master password prompt is a modal dialog	https://bugzilla.mozilla.org/show_bug.cgi?id=461455
+b464237	NoScript plus IE Tab - NoScript fails when return from ie engine	https://bugzilla.mozilla.org/show_bug.cgi?id=464237
+b465183	Change another website content.	https://bugzilla.mozilla.org/show_bug.cgi?id=465183
+b465315	Malware Webpage	https://bugzilla.mozilla.org/show_bug.cgi?id=465315
+b466154	"Firefox hangs and does not respond and it leads to Windows hanging and not responding if you use the Javascript method ""open""."	https://bugzilla.mozilla.org/show_bug.cgi?id=466154
+b468063	Deleted passwords (and bookmarks) return after upgrade	https://bugzilla.mozilla.org/show_bug.cgi?id=468063
+b469939	it is possible to trick a user to give away access credentials by forcing a foreign tab/window to redirect to a malicious site after a successful authentication	https://bugzilla.mozilla.org/show_bug.cgi?id=469939
+b469976	Firefox 2 security support should not lapse before Debian Lenny is released	https://bugzilla.mozilla.org/show_bug.cgi?id=469976
+b470363	A script attaches and infect website index files, and a few other using FF as the medium	https://bugzilla.mozilla.org/show_bug.cgi?id=470363
+b471657	completely different behavior regarding certificates and trust	https://bugzilla.mozilla.org/show_bug.cgi?id=471657
+b471985	Executable file will be downloaded and executed (possible virus)	https://bugzilla.mozilla.org/show_bug.cgi?id=471985
+b474311	"Ability to disable ""This web site does not supply identity information"" pop-up on the address bar."	https://bugzilla.mozilla.org/show_bug.cgi?id=474311
+b475510	MALWARE attack on Firefox from http://creditoslibres.piczo.com/ -> blocked by forgery alert	https://bugzilla.mozilla.org/show_bug.cgi?id=475510
+b476505	Add preference to turn javascript: bookmarks off/on	https://bugzilla.mozilla.org/show_bug.cgi?id=476505
+b477244	Embed a list of URLs for CRLs and have Firefox fetch and update them periodically	https://bugzilla.mozilla.org/show_bug.cgi?id=477244	"
+a/security/manager/ssl/src/nsIdentityChecking.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=363120&action=diff	"
+    | CERT_REV_MI_REQUIRE_SOME_FRESH_INFO_AVAILABLE;
+
+
+  PRUint64 revChainMethodIndependentFlags = 
+    CERT_REV_MI_TEST_ALL_LOCAL_INFORMATION_FIRST
+    //| CERT_REV_MI_REQUIRE_SOME_FRESH_INFO_AVAILABLE
+    ;
+  rev.chainTests.cert_rev_flags_per_method = methodFlags;
+    revMethodIndependentFlags;"	"
+    | CERT_REV_MI_REQUIRE_SOME_FRESH_INFO_AVAILABLE
+    ;
+  rev.chainTests.cert_rev_flags_per_method = chain_methodFlags;
+    revChainMethodIndependentFlags;"
+b477251	Running FF305 intercepts inbound X from remote FF	https://bugzilla.mozilla.org/show_bug.cgi?id=477251
+b480622	add option to not display EV company name in the address bar	https://bugzilla.mozilla.org/show_bug.cgi?id=480622
+b481619	Option to Ignore CA on Private IP Ranges (RFC1918: 192.168.0.0/16; 172.16.0.0/12; 10.0.0.0/8)	https://bugzilla.mozilla.org/show_bug.cgi?id=481619
+b482313	Integrated security authenticates against OLD password (changed several hours ago)	https://bugzilla.mozilla.org/show_bug.cgi?id=482313
+b483130	Possible security bug when searching on google involving 1password	https://bugzilla.mozilla.org/show_bug.cgi?id=483130
+b483436	history can help identify adware	https://bugzilla.mozilla.org/show_bug.cgi?id=483436
+b484005	howto disable warning for https://USERNAME:PW@dom.tld?	https://bugzilla.mozilla.org/show_bug.cgi?id=484005
+b486617	Persistent Disruptive Connection to sedoparking.com	https://bugzilla.mozilla.org/show_bug.cgi?id=486617
+b489139	[meta] Increase the acceptance rate of minor updates (only 80% of Firefox users install minor version updates)	https://bugzilla.mozilla.org/show_bug.cgi?id=489139
+b490159	Bank of America Site Key does not recognize my computer from previous visits	https://bugzilla.mozilla.org/show_bug.cgi?id=490159
+b493106	simple code that makes browser hanged	https://bugzilla.mozilla.org/show_bug.cgi?id=493106
+b493298	SSL Certs: Says there's no need to add an exception, but still won't allow access to page	https://bugzilla.mozilla.org/show_bug.cgi?id=493298
+b493650	Address Bar - you start typing and all previous site show in dropdown.	https://bugzilla.mozilla.org/show_bug.cgi?id=493650
+b495758	signText form does not show certificates with equal nicknames	https://bugzilla.mozilla.org/show_bug.cgi?id=495758
+b496685	Refuses to Load HW PKCS#11 dll under Vista, under Win XP loads the same module o.k.	https://bugzilla.mozilla.org/show_bug.cgi?id=496685
+b497126	Passwords not Saving	https://bugzilla.mozilla.org/show_bug.cgi?id=497126
+b498981	Blank security dialog is displayed when viewing site (with some unauthenticated items?)	https://bugzilla.mozilla.org/show_bug.cgi?id=498981
+b500299	Incorrectly shows EV green bar even for CNAME != CN mismatch	https://bugzilla.mozilla.org/show_bug.cgi?id=500299
+b501779	When using xpcnativewrappers=no Firefox doesn't report any error (in the console) when the binding compromises the security	https://bugzilla.mozilla.org/show_bug.cgi?id=501779
+b503554	Site identifier differences reported in Ubuntu 9.04 VM	https://bugzilla.mozilla.org/show_bug.cgi?id=503554
+b504059	Popup blocker doesn't Work.	https://bugzilla.mozilla.org/show_bug.cgi?id=504059
+b505952	free(): invalid pointer when playing flash video	https://bugzilla.mozilla.org/show_bug.cgi?id=505952
+b506466	https with encryption key >=128 bits does not display correctly	https://bugzilla.mozilla.org/show_bug.cgi?id=506466
+b508513	SSL certificate WILDCARDS not working properly on 3.0.13 (in 3.0.12 and previous versions, the certificate was OK). (ssl_error_bad_cert_domain)	https://bugzilla.mozilla.org/show_bug.cgi?id=508513
+b524949	Disable download option required for Kiosk deployments on non-Windows platforms	https://bugzilla.mozilla.org/show_bug.cgi?id=524949
+b532007	Received Suspicious Facebook Message with a URL that Attempted to Attack my Computer	https://bugzilla.mozilla.org/show_bug.cgi?id=532007
+b532815	Just open any https page. The firefox crash. Even Gmail and any site from google	https://bugzilla.mozilla.org/show_bug.cgi?id=532815
+b536197	"When clicking Add Exception, the ""Permanently store this exception"" option is checked by default"	https://bugzilla.mozilla.org/show_bug.cgi?id=536197
+b536393	javascript installs virus	https://bugzilla.mozilla.org/show_bug.cgi?id=536393
+b536689	Crash when using manual proxy config with Proxomitron Sidki filter set	https://bugzilla.mozilla.org/show_bug.cgi?id=536689
+b537639	Browser exploit. Site is 0wned or hosting malware. Iframe in site is known chinese malware purveyor. You don't have to do anything except look at the site.	https://bugzilla.mozilla.org/show_bug.cgi?id=537639
+b539608	Master password vulnerability to RAM dump	https://bugzilla.mozilla.org/show_bug.cgi?id=539608
+b542715	popup sec_error_unknown_issuer ,but the CA is verisign trust network	https://bugzilla.mozilla.org/show_bug.cgi?id=542715
+b546401	Firefox/Minefield loads a blank site when attempting to open a CACert signed secure website	https://bugzilla.mozilla.org/show_bug.cgi?id=546401
+b551424	Visiting a certain webpage creates a Security Exception WITHOUT notifying the end-user.	https://bugzilla.mozilla.org/show_bug.cgi?id=551424
+b551459	Company web site security is NOT sensed/picked-up by Firefox - BUT - IS PRESENT	https://bugzilla.mozilla.org/show_bug.cgi?id=551459
+b554615	"Move ""Security Error: Content at X may not load data from Y"" and ""potentially vulnerable to CVE-2009-3555"" to an alert."	https://bugzilla.mozilla.org/show_bug.cgi?id=554615
+b568504	Security UI binding for multiprocess Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=568504
+b570343	hijacking searches	https://bugzilla.mozilla.org/show_bug.cgi?id=570343
+b573003	Firefox allows cross-domain POST requests via JavaScript	https://bugzilla.mozilla.org/show_bug.cgi?id=573003
+b575466	"Misleading context for text on ""Save password"" dialog/dropdown"	https://bugzilla.mozilla.org/show_bug.cgi?id=575466
+b575585	The master password for saved passwords is not kept after the 3.6.6 Upgrade.	https://bugzilla.mozilla.org/show_bug.cgi?id=575585
+b579635	Firefox FTP engine is ignoring the server IP received in PASV command response	https://bugzilla.mozilla.org/show_bug.cgi?id=579635
+b581795	Problem with password input fields in all pages	https://bugzilla.mozilla.org/show_bug.cgi?id=581795
+b582298	Clicking on a hyperlink in a page at an HTTP address that points to an HTTP address which responds with an HTTP 302 redirect to an HTTPS address does not properly display SSL certificate information	https://bugzilla.mozilla.org/show_bug.cgi?id=582298
+b586200	does not keep me logged into websites	https://bugzilla.mozilla.org/show_bug.cgi?id=586200
+b587868	Crash @ [@ PR_GetSocketOption ]	https://bugzilla.mozilla.org/show_bug.cgi?id=587868
+b593791	Possible Firefox 0day?	https://bugzilla.mozilla.org/show_bug.cgi?id=593791
+b593841	Firefox will only run with Administrator priviledges	https://bugzilla.mozilla.org/show_bug.cgi?id=593841
+b597922	Report Attack Site Options Missing	https://bugzilla.mozilla.org/show_bug.cgi?id=597922
+b599349	"key event for ""Enter / Return"" can be captured by content event listeners when focus is in the menubar"	https://bugzilla.mozilla.org/show_bug.cgi?id=599349
+b608554	Firefox crashes when executing the given javascript	https://bugzilla.mozilla.org/show_bug.cgi?id=608554
+b610104	Hijacked search results	https://bugzilla.mozilla.org/show_bug.cgi?id=610104
+b611273	Reports problems with the SSL certificate (works fine in IE, Crome, Safari)	https://bugzilla.mozilla.org/show_bug.cgi?id=611273
+b614147	kerberos authentication is not working in 64 bit 4.0b8pre version	https://bugzilla.mozilla.org/show_bug.cgi?id=614147
+b614523	VeriSign Class 3 Secure Server CA - G3 missing	https://bugzilla.mozilla.org/show_bug.cgi?id=614523
+b619525	"Proxy defaults to ""Use system proxy settings"""	https://bugzilla.mozilla.org/show_bug.cgi?id=619525
+b622451	Address bar from one window may be made to appear as if belonging to another	https://bugzilla.mozilla.org/show_bug.cgi?id=622451
+b635038	Minor update 3.5 users to 3.6 and EOL it	https://bugzilla.mozilla.org/show_bug.cgi?id=635038
+b641674	Pornographic Facebook posts are blocked in Explorer, not in Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=641674
+b644533	Got winlock.2741 virus	https://bugzilla.mozilla.org/show_bug.cgi?id=644533
+b654425	every new webpage i open says it has some encrypted and soem unencrypted info on it, popping a dialog window up	https://bugzilla.mozilla.org/show_bug.cgi?id=654425
+b655031	Firefox can be used as Keylogger to Steal your passwords by easily modifying omni.jar file!!	https://bugzilla.mozilla.org/show_bug.cgi?id=655031
+b658901	Malicious webpage loads malware when loaded	https://bugzilla.mozilla.org/show_bug.cgi?id=658901
+b662217	Update the Windows RDF for the Flash Player 10.3.181.22 Security Update	https://bugzilla.mozilla.org/show_bug.cgi?id=662217	"
+pfs.php"	https://bugzilla.mozilla.org/attachment.cgi?id=537537&action=diff	"
+            $InstallerHash = 'sha256:609dd40fd73eebcc1ff4aa1b48390de05d47076d16efe24b3f2637a1576549a3';"	"
+            $InstallerHash = 'sha256:fc663c9610595af022cf51b1c2e8565cc46d858a6f336965dd9e26f35c0d65ea';"
+b672073	Firefox update	https://bugzilla.mozilla.org/show_bug.cgi?id=672073
+b672430	IcedTea-Web Plugin(suse-.0.4.2-i386) Java applet invoke offload failure .	https://bugzilla.mozilla.org/show_bug.cgi?id=672430
+b680339	Uncheck Remember Password but it remains checked	https://bugzilla.mozilla.org/show_bug.cgi?id=680339
+b682775	"No link ""I Understand the Risks"""	https://bugzilla.mozilla.org/show_bug.cgi?id=682775
+b684635	Firefox 3.6.21 security update will not let me open links in my emails.	https://bugzilla.mozilla.org/show_bug.cgi?id=684635
+b688839	Investigate stack buffer overflow in nsWindowsShellService::GetMailAccountKey	https://bugzilla.mozilla.org/show_bug.cgi?id=688839
+b689451	Need a way to recover passwords when master password forgotten	https://bugzilla.mozilla.org/show_bug.cgi?id=689451
+b702261	"After session restore, ""Error: ASSERTION: browser.js host is inconsistent. Content window has <mochi.test:8888> but cached host is <>. Source File: chrome://browser/content/browser.js Line: 9637"""	https://bugzilla.mozilla.org/show_bug.cgi?id=702261	"
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=574597&action=diff		
+b702922	Printing password to command-line	https://bugzilla.mozilla.org/show_bug.cgi?id=702922
+b704572	high win spy security hole, confirmed with firefox 8	https://bugzilla.mozilla.org/show_bug.cgi?id=704572
+b712295	godaddy ssl certificate not trusted	https://bugzilla.mozilla.org/show_bug.cgi?id=712295
+b725944	"Security issue: The web site ""http://a9zlg.ru/adser"" installed malicious programs on my hard disk without permission."	https://bugzilla.mozilla.org/show_bug.cgi?id=725944
+b728918	Host proof hosting to Firefox Sync	https://bugzilla.mozilla.org/show_bug.cgi?id=728918
+b744945	"Optionally allow Firefox to define its own SSL error behaviour (only if Firefox wants to override the default ""prompts=never"" and ""logging=enabled"")"	https://bugzilla.mozilla.org/show_bug.cgi?id=744945	"
+a/browser/components/build/nsModule.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=655130&action=diff		
+b762013	"""Remember Password for Sites"" box will not stay checked."	https://bugzilla.mozilla.org/show_bug.cgi?id=762013
+b764820	Everyday I have to accept my site's untrusted server site certificate	https://bugzilla.mozilla.org/show_bug.cgi?id=764820
+b769644	Develop skeleton addon which uses lightweight update mechanism to dis-trust certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=769644
+b779612	Collect telemetry data to determine what % of users use the password manager to save passwords	https://bugzilla.mozilla.org/show_bug.cgi?id=779612
+b787738	Telemetry for Geolocation Prompt UI	https://bugzilla.mozilla.org/show_bug.cgi?id=787738	"
+a/browser/components/nsBrowserGlue.js
+a/security/manager/boot/public/nsISecurityUITelemetry.idl"	https://bugzilla.mozilla.org/attachment.cgi?id=659493&action=diff		
+b797061	Viewable passwords int he Firefox Settings	https://bugzilla.mozilla.org/show_bug.cgi?id=797061
+b800098	Do not allow the user to unblock active mixed content on HSTS sites	https://bugzilla.mozilla.org/show_bug.cgi?id=800098
+b801629	SSL certificate issue	https://bugzilla.mozilla.org/show_bug.cgi?id=801629
+b806666	no lock icon on https site	https://bugzilla.mozilla.org/show_bug.cgi?id=806666
+b809682	Master Password prompt/dialog needs a redesign	https://bugzilla.mozilla.org/show_bug.cgi?id=809682
+b815334	Potential persistence issues with Mixed Active Content Icon	https://bugzilla.mozilla.org/show_bug.cgi?id=815334
+b830633	https://twitter.com is no longer accessible after withdrawing trust from	https://bugzilla.mozilla.org/show_bug.cgi?id=830633
+b832610	extensions can still be installed silently	https://bugzilla.mozilla.org/show_bug.cgi?id=832610
+b836352	Differentiating active vs passive mixed content for requests made by plugins	https://bugzilla.mozilla.org/show_bug.cgi?id=836352
+b838817	Mixed_Content not being blocked on some websites	https://bugzilla.mozilla.org/show_bug.cgi?id=838817
+b845219	HTTPS not working properly with Outlook.	https://bugzilla.mozilla.org/show_bug.cgi?id=845219
+b851202	JavaScript Crash	https://bugzilla.mozilla.org/show_bug.cgi?id=851202
+b860752	self signed certificate can't be accepted in iframe	https://bugzilla.mozilla.org/show_bug.cgi?id=860752
+b873769	XSS about:home localStorage	https://bugzilla.mozilla.org/show_bug.cgi?id=873769
+b886212	Restrict negative user.js changes	https://bugzilla.mozilla.org/show_bug.cgi?id=886212
+b893506	CSS should not trigger Renego active content security warning	https://bugzilla.mozilla.org/show_bug.cgi?id=893506
+b893937	"""This is Nightly secure page"" for an http page"	https://bugzilla.mozilla.org/show_bug.cgi?id=893937
+b900465	Unable to use Facebook app with mixed-content-blocked-notification-icon enabled	https://bugzilla.mozilla.org/show_bug.cgi?id=900465
+b950451	Ability to clear the master password on runtime	https://bugzilla.mozilla.org/show_bug.cgi?id=950451
+b959105	Intermittent test_ocsp_caching.js | test failed (with xpcshell return code: 0) | 0 == 1	https://bugzilla.mozilla.org/show_bug.cgi?id=959105
+b959221	Don't ask remember this password if we typed a wrong password	https://bugzilla.mozilla.org/show_bug.cgi?id=959221
+b987908	Problem in Https communication unable to load certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=987908
+b989879	Insecure transition from HTTP to HTTPS in form post	https://bugzilla.mozilla.org/show_bug.cgi?id=989879
+b1000451	firefox crashes with OCSP server conenction	https://bugzilla.mozilla.org/show_bug.cgi?id=1000451
+b1000820	"Constant ""Data/Stack execution not permitted"" errors in the OSX kernel log"	https://bugzilla.mozilla.org/show_bug.cgi?id=1000820
+b1024509	Intermittent browser_identity_UI.js | This test exceeded the timeout threshold. It should be rewritten or split up.	https://bugzilla.mozilla.org/show_bug.cgi?id=1024509
+b1042931	SSL Certificate Status not show in Add Security Exception dialog	https://bugzilla.mozilla.org/show_bug.cgi?id=1042931
+b1064235	Firefox can be MITM'ed still	https://bugzilla.mozilla.org/show_bug.cgi?id=1064235
+b1088193	FF 33 release removes NSS funcionality	https://bugzilla.mozilla.org/show_bug.cgi?id=1088193
+b1088542	Donload of SSL Version Control 0.2 to combat POODLE led to inability to open any website in Firefox 33.	https://bugzilla.mozilla.org/show_bug.cgi?id=1088542
+b1092207	(Error code: sec_error_unknown_issuer) https://developer.mozilla.org/en-US/ fails when Avast HTTPS scanning is enabled	https://bugzilla.mozilla.org/show_bug.cgi?id=1092207
+b1099954	HTML5 video in MP4 format causes security warning	https://bugzilla.mozilla.org/show_bug.cgi?id=1099954
+b1108688	IBM Trusteer Rapport	https://bugzilla.mozilla.org/show_bug.cgi?id=1108688
+b1145261	Add some more noticeable UI to warn RC4-only servers	https://bugzilla.mozilla.org/show_bug.cgi?id=1145261
+b1147202	sec_error_ca_cert_invalid cannot override...	https://bugzilla.mozilla.org/show_bug.cgi?id=1147202
+b1151540	"Unable to update nightly: ""unsecure update"""	https://bugzilla.mozilla.org/show_bug.cgi?id=1151540
+b1152960	Self signed certificates rejected without any choice	https://bugzilla.mozilla.org/show_bug.cgi?id=1152960
+b1162875	no Certificate accept Window anymore	https://bugzilla.mozilla.org/show_bug.cgi?id=1162875
+b1196671	a password instead of mandatory signing for add-ons	https://bugzilla.mozilla.org/show_bug.cgi?id=1196671
+b1236264	please allow to disable spyware functionality	https://bugzilla.mozilla.org/show_bug.cgi?id=1236264
+b1246586	Your connection is not secure	https://bugzilla.mozilla.org/show_bug.cgi?id=1246586
+b308060	Rewrite install-blocked message to reflect reality	https://bugzilla.mozilla.org/show_bug.cgi?id=308060	"
+browser/base/content/browser.js
+browser/locales/en-US/chrome/browser/browser.properties"	https://bugzilla.mozilla.org/attachment.cgi?id=222146&action=diff	"
+          messageString = browserBundle.getFormattedString(""xpinstallWarning"",
+            label: browserBundle.getString(""xpinstallWarningButton""),
+            accessKey: browserBundle.getString(""xpinstallWarningButton.accesskey""),"	"
+          messageString = browserBundle.getFormattedString(""xpinstallPromptWarning"",
+            label: browserBundle.getString(""xpinstallPromptWarningButton""),
+            accessKey: browserBundle.getString(""xpinstallPromptWarningButton.accesskey""),"
+b1164569	text overlaps image on SSLv3 error page with small firefox windows	https://bugzilla.mozilla.org/show_bug.cgi?id=1164569	"
+a/browser/themes/shared/aboutNetError.css"	https://bugzilla.mozilla.org/attachment.cgi?id=8703280&action=diff	"
+  #errorTitle {
+
+  #errorTitle[weakCrypto=true] {"	"
+  #errorTitle,
+  #errorTitle[sslv3=true],"
+b1236975	Re-enable SHA-1 certificates	https://bugzilla.mozilla.org/show_bug.cgi?id=1236975
+b1181953	[UX] Define interface needed to support containers	https://bugzilla.mozilla.org/show_bug.cgi?id=1181953
+b1191442	Add New Container to File menu	https://bugzilla.mozilla.org/show_bug.cgi?id=1191442	"
+a/browser/base/content/tabbrowser.xml
+a/browser/base/content/utilityOverlay.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8666675&action=diff	"
+                                  noReferrer: aNoReferrer });
+
+            // If we open a new tab with the newtab URL,
+            // check if there is a preloaded browser ready.
+            if (aURI == BROWSER_NEW_TAB_URL) {
+              b = this._createBrowser({remote, uriIsAboutBlank});
+
+                                       userContextId: aUserContextId});"	"
+                                  noReferrer: aNoReferrer,
+                                  userContextId: aUserContextId });
+            // If we open a new tab with the newtab URL in the default
+            // userContext, check if there is a preloaded browser ready.
+            if (aURI == BROWSER_NEW_TAB_URL && !aUserContextId) {
+              b = this._createBrowser({remote: remote,
+                                       uriIsAboutBlank: uriIsAboutBlank,"
+b1191451	Add tab decoration signifying userContextId	https://bugzilla.mozilla.org/show_bug.cgi?id=1191451	"
+a/browser/base/content/tabbrowser.xml
+a/browser/themes/shared/tabs.inc.css"	https://bugzilla.mozilla.org/attachment.cgi?id=8657286&action=diff		
+b1191455	Add URL bar decoration signifying userContextId	https://bugzilla.mozilla.org/show_bug.cgi?id=1191455	"
+a/browser/base/content/browser.js
+a/browser/base/content/browser.xul
+a/browser/base/content/tabbrowser.xml
+a/browser/locales/en-US/chrome/browser/browser.properties
+a/browser/themes/shared/usercontext/usercontext.inc.css"	https://bugzilla.mozilla.org/attachment.cgi?id=8657382&action=diff		
+b1191494	[meta] Implement minimal UI prototype for Contextual Identity Project	https://bugzilla.mozilla.org/show_bug.cgi?id=1191494
+b782654	Implement Mixed Content Blocker New Icon - Backend Changes	https://bugzilla.mozilla.org/show_bug.cgi?id=782654	"
+a/content/base/src/nsMixedContentBlocker.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=687575&action=diff	"
+  // Default policy: allow the load if we find no reason to block it.
+  *aDecision = nsIContentPolicy::ACCEPT;
+
+  MOZ_ASSERT(NS_IsMainThread());
+  // If mixed script blocking and mixed display blocking are turned off
+  // we can return early
+  if (!sBlockMixedScript && !sBlockMixedDisplay) {
+    return NS_OK;
+  }
+  // We need aRequestingLocation to pull out the scheme. If it isn't passed
+  // in, get it from the DOM node.
+  if (!aRequestingLocation) {
+    nsCOMPtr<nsINode> node = do_QueryInterface(aRequestingContext);
+    if (node) {
+      nsCOMPtr<nsIURI> principalUri;
+      node->NodePrincipal()->GetURI(getter_AddRefs(principalUri));
+      aRequestingLocation = principalUri;
+    }
+    // If we still don't have a requesting location then we can't tell if
+    // this is a mixed content load.  Deny to be safe.
+    if (!aRequestingLocation) {
+      *aDecision = nsIContentPolicy::REJECT_REQUEST;
+
+  // the content of the page, and because blocking them does not have any
+  // negative effect on the page loading.
+  //
+  // TYPE_PING: Ping requests are POSTS, not GETs like images and media.
+  // Also, PING requests have no bearing on the rendering or operation of
+  // the page when used as designed, so even though they are lower risk than
+  // scripts, blocking them is basically risk-free as far as compatibility is
+  // concerned.  Ping is turned off by default in Firefox, so unless a user
+  // opts into ping, no request will be made.  Categorizing this as Mixed
+  // Display Content for now, but this is subject to change.
+  //
+  // TYPE_STYLESHEET: XSLT stylesheets can insert scripts. CSS positioning
+  // and other advanced CSS features can possibly be exploited to cause
+  // spoofing attacks (e.g. make a ""grant permission"" button look like a
+  // ""refuse permission"" button).
+  //
+  // TYPE_WEBSOCKET: The Websockets API requires browsers to
+  // reject mixed-content websockets: ""If secure is false but the origin of
+  // the entry script has a scheme component that is itself a secure protocol,
+  // e.g. HTTPS, then throw a SecurityError exception."" We already block mixed
+  // content websockets within the websockets implementation, so we don't need
+  // to do any blocking here, nor do we need to provide a way to undo or
+  // override the blocking. Websockets without TLS are very flaky anyway in the
+  // face of many HTTP-aware proxies. Compared to psasive content, there is
+  // additional risk that the script using WebSockets will disclose sensitive
+  // information from the HTTPS page and/or eval (directly or indirectly)
+  // received data.
+  //
+  // TYPE_XMLHTTPREQUEST: XHR requires either same origin or CORS, so most
+  // mixed-content XHR will already be blocked by that check. This will also
+  // block HTTPS-to-HTTP XHR with CORS. The same security concerns mentioned
+  // above for WebSockets apply to XHR, and XHR should have the same security
+  // properties as WebSockets w.r.t. mixed content. XHR's handling of redirects
+  // amplifies these concerns.
+
+
+  MOZ_STATIC_ASSERT(TYPE_DATAREQUEST == TYPE_XMLHTTPREQUEST,
+                    ""TYPE_DATAREQUEST is not a synonym for ""
+                    ""TYPE_XMLHTTPREQUEST"");
+
+  switch (aContentType) {
+    // The top-level document cannot be mixed content by definition
+    case TYPE_DOCUMENT:
+      *aDecision = ACCEPT;
+    }
+  }
+
+    case TYPE_WEBSOCKET:
+      *aDecision = ACCEPT;
+      return NS_OK;
+  // Check the parent scheme. If it is not an HTTPS page then mixed content
+  // restrictions do not apply.
+  bool parentIsHttps;
+  if (NS_FAILED(aRequestingLocation->SchemeIs(""https"", &parentIsHttps)) ||
+      !parentIsHttps) {
+    return NS_OK;
+
+      break;
+
+    // Active content (or content with a low value/risk-of-blocking ratio)
+    // that has been explicitly evaluated; listed here for documentation
+    // purposes and to avoid the assertion and warning for the default case.
+    case TYPE_CSP_REPORT:
+    case TYPE_DTD:
+    case TYPE_FONT:
+    case TYPE_OBJECT:
+    case TYPE_OBJECT_SUBREQUEST:
+    case TYPE_SCRIPT:
+    case TYPE_STYLESHEET:
+    case TYPE_SUBDOCUMENT:
+    case TYPE_XBL:
+    case TYPE_XMLHTTPREQUEST:
+    case TYPE_OTHER:
+      break;
+
+
+    // This content policy works as a whitelist.
+    default:
+      MOZ_NOT_REACHED(""Mixed content of unknown type"");
+      NS_WARNING(""Mixed content of unknown type"");
+      break;
+  // If we are here we have mixed content.
+
+  // Decide whether or not to allow the mixed content based on what type of
+  // content it is and if the user permitted it.
+  switch (aContentType) {
+    case nsIContentPolicy::TYPE_FONT:
+    case nsIContentPolicy::TYPE_OBJECT:
+    case nsIContentPolicy::TYPE_SCRIPT:
+    case nsIContentPolicy::TYPE_STYLESHEET:
+    case nsIContentPolicy::TYPE_SUBDOCUMENT:
+    case nsIContentPolicy::TYPE_WEBSOCKET:
+    case nsIContentPolicy::TYPE_XMLHTTPREQUEST:
+      // fonts, plugin content, scripts, stylesheets, iframes, websockets and
+      // XHRs are considered high risk for mixed content so these are blocked
+      // per the mixed script preference
+      if (sBlockMixedScript) {
+        *aDecision = nsIContentPolicy::REJECT_REQUEST;
+
+        // Fire the event from a script runner as it is unsafe to run script
+        // from within ShouldLoad
+        // Disabled until bug 782654 is fixed.
+        /*
+        nsContentUtils::AddScriptRunner(
+          new nsMixedContentEvent(aRequestingContext, eMixedScript));
+        */
+      }
+      break;
+
+    case nsIContentPolicy::TYPE_IMAGE:
+    case nsIContentPolicy::TYPE_MEDIA:
+    case nsIContentPolicy::TYPE_PING:
+      // display (static) content are considered moderate risk for mixed content
+      // so these will be blocked according to the mixed display preference
+      if (sBlockMixedDisplay) {
+        *aDecision = nsIContentPolicy::REJECT_REQUEST;
+
+        // Fire the event from a script runner as it is unsafe to run script
+        // from within ShouldLoad
+        // Disabled until bug 782654 is fixed.
+        /*
+        nsContentUtils::AddScriptRunner(
+          new nsMixedContentEvent(aRequestingContext, eMixedDisplay));
+        */
+      }
+      break;
+
+    default:
+      // other types of mixed content are allowed
+      break;"	"
+  // Asserting that we are on the main thread here and hence do not have to lock
+  // and unlock sBlockMixedScript and sBlockMixedDisplay before reading/writing
+  // to them.
+  // Assume active (high risk) content and blocked by default
+  MixedContentTypes classification = eMixedScript;
+
+  // Notes on non-obvious decisions:
+  //
+  // TYPE_DTD: A DTD can contain entity definitions that expand to scripts.
+  //
+  // TYPE_FONT: The TrueType hinting mechanism is basically a scripting
+  // language that gets interpreted by the operating system's font rasterizer.
+  // Mixed content web fonts are relatively uncommon, and we can can fall back
+  // to built-in fonts with minimal disruption in almost all cases.
+  //
+  // TYPE_OBJECT_SUBREQUEST could actually be either active content (e.g. a
+  // script that a plugin will execute) or display content (e.g. Flash video
+  // content).
+  //
+  // TYPE_CSP_REPORT: High-risk because they directly leak information about
+    // Creating insecure websocket connections in a secure page is blocked already
+    // in the websocket constructor. We don't need to check the blocking here
+    // and we don't want to un-block
+
+    // Static display content is considered moderate risk for mixed content so
+    // these will be blocked according to the mixed display preference
+    case TYPE_IMAGE:
+    case TYPE_MEDIA:
+    case TYPE_PING:
+      classification = eMixedDisplay;
+  // We need aRequestingLocation to pull out the scheme. If it isn't passed
+  // in, get it from the DOM node.
+  if (!aRequestingLocation) {
+    nsCOMPtr<nsINode> node = do_QueryInterface(aRequestingContext);
+    if (node) {
+      nsCOMPtr<nsIURI> principalUri;
+      node->NodePrincipal()->GetURI(getter_AddRefs(principalUri));
+      aRequestingLocation = principalUri;
+    }
+    // If we still don't have a requesting location then we can't tell if
+    // this is a mixed content load.  Deny to be safe.
+    if (!aRequestingLocation) {
+      *aDecision = REJECT_REQUEST;
+      return NS_OK;
+    }
+"
+b822366	Implement Mixed Content Blocker New Icon - Frontend Changes	https://bugzilla.mozilla.org/show_bug.cgi?id=822366	"
+a/browser/base/content/browser.js
+a/browser/themes/gnomestripe/browser.css
+a/browser/themes/gnomestripe/jar.mn
+a/browser/themes/pinstripe/browser.css
+a/browser/themes/pinstripe/jar.mn
+a/browser/themes/winstripe/browser.css
+a/browser/themes/winstripe/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=698022&action=diff	"
+    if (location.protocol == ""chrome:"" || location.protocol == ""about:"")
+    else if (state & nsIWebProgressListener.STATE_IDENTITY_EV_TOPLEVEL)
+    else if (state & nsIWebProgressListener.STATE_IS_SECURE)
+    else if (state & nsIWebProgressListener.STATE_IS_BROKEN)
+      this.setMode(this.IDENTITY_MODE_MIXED_CONTENT);
+    else
+
+        this.setMode(this.IDENTITY_MODE_MIXED_CONTENT);
+      }
+    } else {"	"
+    if (location.protocol == ""chrome:"" || location.protocol == ""about:"") {
+    } else if (state & nsIWebProgressListener.STATE_IDENTITY_EV_TOPLEVEL) {
+    } else if (state & nsIWebProgressListener.STATE_IS_SECURE) {
+    } else if (state & nsIWebProgressListener.STATE_IS_BROKEN) {
+      if (gBrowser.docShell.hasMixedActiveContentLoaded) {
+        this.setMode(this.IDENTITY_MODE_MIXED_ACTIVE_CONTENT);
+      } else {"
+b822371	Implement Mixed Content Blocker Doorhanger - Frontend Changes	https://bugzilla.mozilla.org/show_bug.cgi?id=822371	"
+a/browser/app/profile/firefox.js
+a/browser/base/content/browser.js
+a/browser/base/content/browser.xul
+a/browser/locales/en-US/chrome/browser/browser.dtd
+a/browser/locales/en-US/chrome/browser/browser.properties
+a/browser/themes/gnomestripe/browser.css
+a/browser/themes/gnomestripe/jar.mn
+a/browser/themes/pinstripe/browser.css
+a/browser/themes/pinstripe/jar.mn
+a/browser/themes/winstripe/browser.css
+a/browser/themes/winstripe/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=706132&action=diff		
+b822373	Learn More pages for Mixed Content Blocker	https://bugzilla.mozilla.org/show_bug.cgi?id=822373
+b908377	Interactive content blocking screen has typos	https://bugzilla.mozilla.org/show_bug.cgi?id=908377
+b1182551	don't show the mixed display content indicator if the top level load is http://	https://bugzilla.mozilla.org/show_bug.cgi?id=1182551	"
+a/security/manager/ssl/nsSecureBrowserUIImpl.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=8641935&action=diff	"
+  // * If so, the state should be broken; overriding the previous state
+  // set by the lock parameter.
+
+  if (lock == lis_no_security) {
+      // this is to ensure that http: pages with mixed content in nested
+      // iframes don't get marked as broken instead of insecure
+      tempState = STATE_IS_INSECURE;
+  }
+      *aState = STATE_IS_BROKEN |
+      *aState = STATE_IS_BROKEN |
+      *aState = STATE_IS_BROKEN |"	"
+  // * If so, the state should be broken or insecure; overriding the previous
+  // state set by the lock parameter.
+  uint32_t tempState = STATE_IS_BROKEN;
+      *aState = tempState |
+      *aState = tempState |
+      *aState = tempState |"
+b1235667	PermissionsUtils.jsm needs to stop using createCodebasePrincipalFromOrigin	https://bugzilla.mozilla.org/show_bug.cgi?id=1235667	"
+a/toolkit/modules/PermissionsUtils.jsm"	https://bugzilla.mozilla.org/attachment.cgi?id=8733793&action=diff	"
+        principals = [ Services.scriptSecurityManager.createCodebasePrincipalFromOrigin(origin) ];
+
+        principals = [ Services.scriptSecurityManager.createCodebasePrincipal(uri, attr) ];"	"
+        let attr = ChromeUtils.createDefaultOriginAttributes();
+        let uri = Services.io.newURI(origin, null, null);"
+b623155	address bar does not contain the correct URL when loading a redirect to an SSL error page in a new tab	https://bugzilla.mozilla.org/show_bug.cgi?id=623155	"
+a/suite/browser/tabbrowser.xml"	https://bugzilla.mozilla.org/attachment.cgi?id=576901&action=diff	"
+                // The document loaded correctly, clear the value if we should
+                if (this.mBrowser.userTypedClear > 0)
+"	"
+                // Clear the value if this was a user document or an error page.
+                if (this.mBrowser.userTypedClear > 0 ||
+                    !Components.isSuccessCode(aRequest.status))"
+b834830	Strike through https in location bar for sites that have mixed active content loaded.	https://bugzilla.mozilla.org/show_bug.cgi?id=834830	"
+a/dom/base/nsISelectionController.idl
+a/layout/generic/nsFrame.cpp
+a/layout/generic/nsSelection.cpp
+a/layout/generic/nsTextFrame.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=8630345&action=diff	"
+[scriptable, uuid(82c3a9df-9bd6-4da2-b561-d85a9eec5caa)]
+   const short NUM_SELECTIONTYPES=10;
+"	"
+[scriptable, uuid(e5238312-2f50-4ec1-8e23-6337f3a67727)]
+   const short SELECTION_URLSTRIKEOUT=512;
+   const short NUM_SELECTIONTYPES=11;"
+b1160818	"When reporting a cert error (from certerror page), browser console says ""Sending message that cannot be cloned. Are you trying to send an XPCOM object?"""	https://bugzilla.mozilla.org/show_bug.cgi?id=1160818	"
+a/browser/base/content/content.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8601123&action=diff	"
+        location: contentDoc.location,"	"
+        location: {hostname: contentDoc.location.hostname, port: contentDoc.location.port},"
+b310373	"Dragging & Dropping a link on the ""New Window""/""New Tab"" buttons can load priviliged xul"	https://bugzilla.mozilla.org/show_bug.cgi?id=310373	"
+browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=197773&action=diff	"
+      if (url)
+
+      if (url)
+"	"
+      if (url) {
+        getBrowser().dragDropSecurityCheck(aEvent, aDragSession, url);
+      if (url) {
+        getBrowser().dragDropSecurityCheck(aEvent, aDragSession, url);"
+b1274712	Copy for string changes to DNT dialog	https://bugzilla.mozilla.org/show_bug.cgi?id=1274712
+b1273696	"Usability concerns for new ""restore default settings"" UI in SSL error page"	https://bugzilla.mozilla.org/show_bug.cgi?id=1273696
+b1217165	Write Learn More SUMO Article for Insecure Password Warning in Control Center	https://bugzilla.mozilla.org/show_bug.cgi?id=1217165
+b921090	Upgrade Firefox to NSS 3.15.2 to fix bug 894370	https://bugzilla.mozilla.org/show_bug.cgi?id=921090	"
+a/security/coreconf/coreconf.dep
+a/security/nss/TAG-INFO
+a/security/nss/TAG-INFO-CKBI
+a/security/nss/lib/libpkix/include/pkix_pl_pki.h
+a/security/nss/lib/libpkix/pkix/top/pkix_build.c
+a/security/nss/lib/libpkix/pkix_pl_nss/pki/pkix_pl_cert.c
+a/security/nss/lib/nss/nss.h
+a/security/nss/lib/softoken/pkcs11.c
+a/security/nss/lib/softoken/softkver.h
+a/security/nss/lib/ssl/ssl3con.c
+a/security/nss/lib/util/nssutil.h"	https://bugzilla.mozilla.org/attachment.cgi?id=820575&action=diff		
+b271559	Countermeasures for Java/plugin/extension vulnerabilities (disable, warn, offer updates)	https://bugzilla.mozilla.org/show_bug.cgi?id=271559	"
+a/toolkit/mozapps/extensions/src/nsExtensionManager.js.in"	https://bugzilla.mozilla.org/attachment.cgi?id=271173&action=diff	"
+    this.entries = this._loadBlocklistFromFile(getFile(KEY_PROFILEDIR,
+                                                       [FILE_BLOCKLIST]));
+      return { };
+      return { };
+        return { };
+      const kELEMENT_NODE = Components.interfaces.nsIDOMNode.ELEMENT_NODE;
+      var itemNodes = this._getItemNodes(doc.documentElement.childNodes);
+      for (var i = 0; i < itemNodes.length; ++i) {
+        var blocklistElement = itemNodes[i];
+        if (blocklistElement.nodeType != kELEMENT_NODE ||
+            blocklistElement.localName != ""emItem"")
+          continue;
+
+        blocklistElement.QueryInterface(Components.interfaces.nsIDOMElement);
+        var versionNodes = blocklistElement.childNodes;
+        var id = blocklistElement.getAttribute(""id"");
+        result[id] = [];
+        for (var x = 0; x < versionNodes.length; ++x) {
+          var versionRangeElement = versionNodes[x];
+          if (versionRangeElement.nodeType != kELEMENT_NODE ||
+              versionRangeElement.localName != ""versionRange"")
+            continue;
+
+          result[id].push(new BlocklistItemData(versionRangeElement));
+        }
+        // if only the extension ID is specified block all versions of the
+        // extension for the current application.
+        if (result[id].length == 0)
+          result[id].push(new BlocklistItemData(null));
+      }
+      return { };
+  _getItemNodes: function(deChildNodes) {
+          emItemsElement.localName == ""emItems"")
+        return emItemsElement.childNodes;
+
+      }
+    }
+    if (!itemNodes)
+      return result;
+
+    var itemName = prefix + ""Item"";
+    for (var i = 0; i < itemNodes.length; ++i) {
+      var blocklistElement = itemNodes[i];
+      if (blocklistElement.nodeType != kELEMENT_NODE ||
+          blocklistElement.localName != itemName)
+        continue;
+
+      blocklistElement.QueryInterface(Components.interfaces.nsIDOMElement);
+      handler(blocklistElement, result);
+    }
+    return result;
+  },
+
+  _handleEmItemNode: function(blocklistElement, result) {
+    const kELEMENT_NODE = Components.interfaces.nsIDOMNode.ELEMENT_NODE;
+    var versionNodes = blocklistElement.childNodes;
+    var id = blocklistElement.getAttribute(""id"");
+    result[id] = [];
+    for (var x = 0; x < versionNodes.length; ++x) {
+      var versionRangeElement = versionNodes[x];
+      if (versionRangeElement.nodeType != kELEMENT_NODE ||
+          versionRangeElement.localName != ""versionRange"")
+        continue;
+
+      result[id].push(new BlocklistItemData(versionRangeElement));
+    return [ ];
+
+    if (result[id].length == 0)
+      result[id].push(new BlocklistItemData(null));
+  },
+
+  _handlePluginItemNode: function(blocklistElement, result) {
+    const kELEMENT_NODE = Components.interfaces.nsIDOMNode.ELEMENT_NODE;
+    var matchNodes = blocklistElement.childNodes;
+    var matchList;
+    for (var x = 0; x < matchNodes.length; ++x) {
+      var matchElement = matchNodes[x];
+      if (matchElement.nodeType != kELEMENT_NODE ||
+          matchElement.localName != ""match"")
+        continue;
+
+      var name = matchElement.getAttribute(""name"");
+      var exp = matchElement.getAttribute(""exp"");
+      if (!matchList)
+        matchList = { };
+      matchList[name] = new RegExp(exp, ""m"");
+    }
+    if (matchList)
+      result.push(matchList);
+  },
+
+  _checkPlugin: function(plugin) {
+    for each (var matchList in this._pluginEntries) {
+      var matchFailed = false;
+      for (var name in matchList) {
+        if (typeof(plugin[name]) != ""string"" ||
+            !matchList[name].test(plugin[name])) {
+          matchFailed = true;
+          break;
+        }
+      }
+
+      if (!matchFailed) {
+        plugin.blocklisted = true;
+        return;
+      }
+    }
+    plugin.blocklisted = false;
+  },
+
+  _checkPluginsList: function() {
+    this._ensureBlocklist();
+    var phs = Components.classes[""@mozilla.org/plugin/host;1""]
+                        .getService(Components.interfaces.nsIPluginHost);
+    phs.getPluginTags({ }).forEach(this._checkPlugin, this);
+      this.entries = this._loadBlocklistFromFile(getFile(KEY_PROFILEDIR, 
+                                                         [FILE_BLOCKLIST]));"	"
+    this._loadBlocklistFromFile(getFile(KEY_PROFILEDIR, [FILE_BLOCKLIST]));
+
+      return;
+      return;
+        return;
+      var childNodes = doc.documentElement.childNodes;
+      this.entries = this._processItemNodes(childNodes, ""em"",
+                                            this._handleEmItemNode);
+      this._pluginEntries = this._processItemNodes(childNodes, ""plugin"",
+                                                   this._handlePluginItemNode);
+
+      return;
+  _processItemNodes: function(deChildNodes, prefix, handler) {
+          emItemsElement.localName == containerName) {
+        itemNodes = emItemsElement.childNodes;
+        break;
+    // if only the extension ID is specified block all versions of the
+    // extension for the current application.
+      this._loadBlocklistFromFile(getFile(KEY_PROFILEDIR, [FILE_BLOCKLIST]));
+"
+b793454	Cookie deletion not working on FF15.0.1 - Win	https://bugzilla.mozilla.org/show_bug.cgi?id=793454
+b1106367	"""invalid security certificate"" on Google and other major sites due to Kaspersky"	https://bugzilla.mozilla.org/show_bug.cgi?id=1106367
+b1205715	Strings for Control Center when HTTP pages have login forms	https://bugzilla.mozilla.org/show_bug.cgi?id=1205715
+b1212520	Rewrite browser_bug906190.js with Tasks and re-enable it on Linux	https://bugzilla.mozilla.org/show_bug.cgi?id=1212520
+b1217156	Add a preference to turn on/off insecure password warnings	https://bugzilla.mozilla.org/show_bug.cgi?id=1217156	"
+a/browser/app/profile/firefox.js
+a/browser/base/content/browser.js
+a/browser/base/content/test/general/browser_insecureLoginForms.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8680915&action=diff		
+b1241292	"Revisit ""Your login could be compromised"" string for Insecure Password Warning"	https://bugzilla.mozilla.org/show_bug.cgi?id=1241292	"
+a/browser/components/controlcenter/content/panel.inc.xul
+a/browser/locales/en-US/chrome/browser/browser.dtd"	https://bugzilla.mozilla.org/attachment.cgi?id=8711230&action=diff	"
+            <description when-loginforms=""insecure"">&identity.insecureLoginForms;</description>"	"
+            <description when-loginforms=""insecure"">&identity.insecureLoginForms2;</description>"
+b354316	adding news feed reader causes trouble	https://bugzilla.mozilla.org/show_bug.cgi?id=354316	"
+feeds/src/WebContentConverter.js"	https://bugzilla.mozilla.org/attachment.cgi?id=240203&action=diff		
+b407369	BrowserOnCommand() for Firefox netError page uses wrong location object	https://bugzilla.mozilla.org/show_bug.cgi?id=407369	"
+browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=292472&action=diff	"
+              params.location = content.location.href;
+          content.location.reload();"	"
+              params.location = errorDoc.location.href;
+          errorDoc.location.reload();"
+b307770	"Can't install XPI with a click on the link with target=""_blank"""	https://bugzilla.mozilla.org/show_bug.cgi?id=307770	"
+browser/base/content/browser.js
+xpinstall/src/nsInstallTrigger.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=274467&action=diff	"
+        var host = browser.docShell.QueryInterface(Components.interfaces.nsIWebNavigation).currentURI.host;
+            callback: function() { return xpinstallEditPermissions(shell); }
+function xpinstallEditPermissions(aDocShell)
+                   prefilledHost  : webNav.currentURI.host,"	"
+        var host = aData;
+            callback: function() { return xpinstallEditPermissions(shell, host); }
+function xpinstallEditPermissions(aDocShell, aHost)
+                   prefilledHost  : aHost,"
+b376473	[mz2] file action dialog controls vulnerable to refocus race	https://bugzilla.mozilla.org/show_bug.cgi?id=376473	"
+toolkit/mozapps/downloads/src/nsHelperAppDlg.js.in
+toolkit/content/commonDialog.js"	https://bugzilla.mozilla.org/attachment.cgi?id=299684&action=diff	"
+      this._timer.initWithCallback(this, 250, nsITimer.TYPE_ONE_SHOT);
+        this.mDialog.setTimeout(script, 250);"	"
+      this._timer.initWithCallback(this, 1000, nsITimer.TYPE_ONE_SHOT);
+        this.mDialog.setTimeout(script, 1000);"
+b410156	URL files (IE bookmarks) cause remote code to run as local file when opened directly	https://bugzilla.mozilla.org/show_bug.cgi?id=410156	"
+toolkit/components/commandlines/src/nsCommandLine.cpp
+toolkit/components/commandlines/test/Makefile.in
+toolkit/components/commandlines/test/unit/test_bug410156.js.in
+toolkit/components/commandlines/test/unit/test_bug410156.desktop
+toolkit/components/commandlines/test/unit/test_bug410156.url"	https://bugzilla.mozilla.org/attachment.cgi?id=315677&action=diff	"
+    return io->NewFileURI(lf, aResult);
+  }
+
+    if (!url.IsEmpty()) {
+      return io->NewURI(url,
+                        nsnull,
+                        workingDirURI,
+                        aResult);
+    }
+  nsCOMPtr<nsIURI> workingDirURI;
+  if (mWorkingDir) {
+    io->NewFileURI(mWorkingDir, getter_AddRefs(workingDirURI));"	"
+    nsCAutoString url;
+ // Try to resolve the url for .url files.
+ resolveShortcutURL(lf, url);
+    return io->NewFileURI(lf, aResult);
+"
+b1194874	"Maybe switch ""run by"" text to ""owned by"" for EV certificates in the Control Center"	https://bugzilla.mozilla.org/show_bug.cgi?id=1194874	"
+a/browser/components/controlcenter/content/panel.inc.xul
+a/browser/locales/en-US/chrome/browser/browser.dtd"	https://bugzilla.mozilla.org/attachment.cgi?id=8757021&action=diff	"
+                     when-connection=""secure-ev"">&identity.connectionVerified1;</description>"	"
+                     when-connection=""secure-ev"">&identity.connectionVerified2;</description>"
+b514708	SSL Certificates get dropped in mid session or not recognize.	https://bugzilla.mozilla.org/show_bug.cgi?id=514708
+b771465	No security warning by clicking forward or backward	https://bugzilla.mozilla.org/show_bug.cgi?id=771465
+b809982	Update CSP mappings to allow for future Content Types	https://bugzilla.mozilla.org/show_bug.cgi?id=809982
+b1225299	Odd behaviors of the RC4 notifications bar	https://bugzilla.mozilla.org/show_bug.cgi?id=1225299
+b897615	Firefox should list the security key exchange mechanism (ECDHE_RSA)	https://bugzilla.mozilla.org/show_bug.cgi?id=897615
+b390321	Firefox should not show yellow url bar on page with mixed security	https://bugzilla.mozilla.org/show_bug.cgi?id=390321
+b896211	browser.mixedcontent.warning.infoURL should use SSL	https://bugzilla.mozilla.org/show_bug.cgi?id=896211	"
+a/browser/app/profile/firefox.js
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=791909&action=diff		
+b672485	Holding enter allows arbitrary extension installation.	https://bugzilla.mozilla.org/show_bug.cgi?id=672485	"
+a/toolkit/mozapps/extensions/amWebInstallListener.js
+a/toolkit/mozapps/extensions/test/xpinstall/Makefile.in
+a/toolkit/mozapps/extensions/test/xpinstall/browser_bug672485.js
+a/toolkit/mozapps/extensions/test/xpinstall/head.js"	https://bugzilla.mozilla.org/attachment.cgi?id=555021&action=diff	"
+    Services.ww.openWindow(this.window, ""chrome://mozapps/content/xpinstall/xpinstallConfirm.xul"",
+                           null, ""chrome,modal,centerscreen"", args);
+
+    } catch (e) {
+      this.downloads.forEach(function(aInstall) {
+        aInstall.removeListener(this);
+        // Cancel the installs, as currently there is no way to make them fail
+        // from here.
+        aInstall.cancel();
+      }, this);
+      notifyObservers(""addon-install-cancelled"", this.window, this.url,
+                      this.downloads);
+    }"	"
+    try {
+      Services.ww.openWindow(this.window, URI_XPINSTALL_DIALOG,
+                             null, ""chrome,modal,centerscreen"", args);"
+b317380	"The status bar domain name display is not updated when the ""back"" button is clicked (bfcache, XSLT)"	https://bugzilla.mozilla.org/show_bug.cgi?id=317380	"
+content/base/public/nsIDocument.h
+content/base/src/nsDocument.cpp
+content/xslt/src/base/txURIUtils.cpp
+content/xslt/src/xslt/txMozillaTextOutput.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=207531&action=diff	"
+   * Get the channel that was passed to StartDocumentLoad for this
+   * StartDocumentLoad was never called)"	"
+   * Get the channel that was passed to StartDocumentLoad or Reset for this
+   * StartDocumentLoad or Reset were never called)"
+b294074	arbitrary code execution via sidebar (part 3)	https://bugzilla.mozilla.org/show_bug.cgi?id=294074	"
+mozilla/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=183536&action=diff		
+b781018	Telemetry data for Mixed Content (display and script)	https://bugzilla.mozilla.org/show_bug.cgi?id=781018	"
+a/content/base/src/nsDocument.cpp
+a/content/base/src/nsDocument.h
+a/docshell/base/nsDocShell.cpp
+a/toolkit/components/telemetry/Histograms.json"	https://bugzilla.mozilla.org/attachment.cgi?id=768537&action=diff		
+b878606	SSL Warning UI Telmetry should only measure top level frame warnings	https://bugzilla.mozilla.org/show_bug.cgi?id=878606	"
+a/browser/base/content/browser.js
+a/docshell/base/nsDocShell.cpp
+a/security/manager/boot/public/nsISecurityUITelemetry.idl
+a/security/manager/pki/resources/content/exceptionDialog.js"	https://bugzilla.mozilla.org/attachment.cgi?id=758239&action=diff	"
+        secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_CLICK_ADD_EXCEPTION);
+
+        }
+        secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_GET_ME_OUT_OF_HERE);
+
+        }
+        secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TECHNICAL_DETAILS);
+
+        }
+        secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_UNDERSTAND_RISKS);
+
+        }"	"
+        if (isTopFrame) {
+          secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_CLICK_ADD_EXCEPTION);
+        if (isTopFrame) {
+          secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_GET_ME_OUT_OF_HERE);
+        if (isTopFrame) {
+          secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_TECHNICAL_DETAILS);
+        if (isTopFrame) {
+          secHistogram.add(Ci.nsISecurityUITelemetry.WARNING_BAD_CERT_TOP_UNDERSTAND_RISKS);"
+b978797	Can't access to untrusted sites	https://bugzilla.mozilla.org/show_bug.cgi?id=978797	"
+a/dom/browser-element/BrowserElementChildPreload.js
+a/security/manager/ssl/src/NSSErrorsService.cpp
+a/security/manager/ssl/src/TransportSecurityInfo.cpp
+a/security/manager/ssl/tests/unit/test_cert_overrides.js
+a/security/manager/ssl/tests/unit/tlsserver/cmd/BadCertServer.cpp
+a/security/manager/ssl/tests/unit/tlsserver/generate_certs.sh"	https://bugzilla.mozilla.org/attachment.cgi?id=8384949&action=diff		
+b480357	Change browser.identity.ssl_domain_display pref default to 1	https://bugzilla.mozilla.org/show_bug.cgi?id=480357	"
+a/browser/app/profile/firefox.js"	https://bugzilla.mozilla.org/attachment.cgi?id=364344&action=diff	"
+pref(""browser.identity.ssl_domain_display"", 0);"	"
+pref(""browser.identity.ssl_domain_display"", 1);"
+b1111960	Open any pseudo URL (e.g. chrome://) when manually calling a link in a new tab	https://bugzilla.mozilla.org/show_bug.cgi?id=1111960	"
+a/browser/components/nsBrowserGlue.js
+a/browser/modules/ContentClick.jsm
+a/browser/modules/moz.build"	https://bugzilla.mozilla.org/attachment.cgi?id=8542690&action=diff		
+b1163422	Middle-click opens file: links from http:	https://bugzilla.mozilla.org/show_bug.cgi?id=1163422	"
+a/browser/base/content/content.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8604366&action=diff		
+b369427	Showing a blocked pop-up bypasses CheckLoadURI (can load file: URLs)	https://bugzilla.mozilla.org/show_bug.cgi?id=369427	"
+dom/src/base/nsGlobalWindow.cpp"	https://bugzilla.mozilla.org/attachment.cgi?id=254121&action=diff		
+b734076	XSS with context menu	https://bugzilla.mozilla.org/show_bug.cgi?id=734076	"
+a/browser/base/content/nsContextMenu.js
+a/browser/base/content/test/Makefile.in
+a/browser/base/content/test/browser_bug734076.js"	https://bugzilla.mozilla.org/attachment.cgi?id=616324&action=diff	"
+    this.browser.loadURI(frameURL, referrer ? makeURI(referrer) : null);
+
+    openUILink(viewURL, e, null, null, null, null, doc.documentURIObject );
+
+    openUILink(this.bgImageURL, e, null, null, null, null, doc.documentURIObject );
+"	"
+    openUILinkIn(frameURL, ""current"", { disallowInheritPrincipal: true,
+                                        referrerURI: referrer ? makeURI(referrer) : null });
+    openUILink(viewURL, e, { disallowInheritPrincipal: true,
+                             referrerURI: doc.documentURIObject });
+    openUILink(this.bgImageURL, e, { disallowInheritPrincipal: true,
+                                     referrerURI: doc.documentURIObject });"
+b1096319	browser.js should validate opener when using it to determine sidebar to load	https://bugzilla.mozilla.org/show_bug.cgi?id=1096319	"
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8523923&action=diff		
+b1181963	ssl_error_unsupported_version error page has too many stop signs	https://bugzilla.mozilla.org/show_bug.cgi?id=1181963
+b1208141	about:home's search doesn't sanitize input and uses it for .innerHTML (CSS running, JavaScript on events)	https://bugzilla.mozilla.org/show_bug.cgi?id=1208141	"
+a/browser/base/content/contentSearchUI.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8665832&action=diff	"
+      let html = ""<span class='contentSearchSearchWithHeaderSearchText'>"" +
+                 this.input.value + ""</span>"";
+      return;
+
+      searchWithHeader.textContent = this._strings.searchWithHeader;"	"
+      let html = ""<span class='contentSearchSearchWithHeaderSearchText'></span>"";
+
+      searchWithHeader.querySelector('.contentSearchSearchWithHeaderSearchText').textContent = this.input.value;
+    } else {"
+b432741	lock icon in status bar should open security info on single click	https://bugzilla.mozilla.org/show_bug.cgi?id=432741	"
+a/browser/base/content/browser.xul"	https://bugzilla.mozilla.org/attachment.cgi?id=384266&action=diff	"
+                      ondblclick=""if (event.button == 0) displaySecurityInfo();""/>"	"
+                      onclick=""if (event.button == 0 &amp;&amp; event.detail == 1) displaySecurityInfo();""/>"
+b341472	ship with fewer security warnings showing by default	https://bugzilla.mozilla.org/show_bug.cgi?id=341472	"
+browser/app/profile/firefox.js
+netwerk/base/public/security-prefs.js"	https://bugzilla.mozilla.org/attachment.cgi?id=229054&action=diff	"
+pref(""security.warn_entering_secure.show_once"", true);
+pref(""security.warn_leaving_secure.show_once"", true);
+pref(""security.warn_submit_insecure.show_once"", true);"	"
+pref(""security.warn_entering_secure.show_once"", false);
+pref(""security.warn_leaving_secure.show_once"", false);
+pref(""security.warn_submit_insecure.show_once"", false);"
+b914410	Disappearing mixed display icon - grey triangle on Ubuntu	https://bugzilla.mozilla.org/show_bug.cgi?id=914410
+b1066181	"[e10s] site security dialog's ""More Information"" dialog is empty, has no details about the site"	https://bugzilla.mozilla.org/show_bug.cgi?id=1066181
+b451619	Redirects permit cross-domain and local-system image disclosure via CANVAS	https://bugzilla.mozilla.org/show_bug.cgi?id=451619
+b1216219	Odd artifacts when on More Information button mousedown	https://bugzilla.mozilla.org/show_bug.cgi?id=1216219
+b284627	arbitrary code execution via sidebar	https://bugzilla.mozilla.org/show_bug.cgi?id=284627	"
+browser/base/content/browser.js
+browser/base/content/contentAreaUtils.js"	https://bugzilla.mozilla.org/attachment.cgi?id=176487&action=diff	"
+     var wrapper = new XPCNativeWrapper(linkNode, ""href"", ""getAttribute()"");
+       target = linkNode.getAttribute(""target"");
+         if (!wrapper.href) return true;
+         if (linkNode.getAttribute(""onclick"")) return true;
+
+           return true;
+         // javascript links should be executed in the current browser
+         if (wrapper.href.substr(0, 11) === ""javascript:"")
+           return true;
+
+         var docWrapper = new XPCNativeWrapper(wrapper.ownerDocument, ""location"");
+         var locWrapper = new XPCNativeWrapper(docWrapper.location, ""href"");
+         if (!webPanelSecurityCheck(locWrapper.href, wrapper.href))
+           return false;
+"	"
+     var wrapper = new XPCNativeWrapper(linkNode, ""href"", ""getAttribute()"", ""ownerDocument"");
+       target = wrapper.getAttribute(""target"");
+         if (!wrapper.href) 
+           return true;
+         if (wrapper.getAttribute(""onclick"")) "
+b290079	arbitrary code execution via sidebar (part 2)	https://bugzilla.mozilla.org/show_bug.cgi?id=290079	"
+mozilla/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=180547&action=diff		
+b295121	Secure Site indicator not shown when secure site loaded in new tab	https://bugzilla.mozilla.org/show_bug.cgi?id=295121	"
+toolkit/content/widgets/browser.xml"	https://bugzilla.mozilla.org/attachment.cgi?id=184315&action=diff		
+b304133	Iframe inside an absolute positioned div crashes Browser	https://bugzilla.mozilla.org/show_bug.cgi?id=304133
+b313946	If the server serves a SSL certificate where the common name != host name Firefox just shows a blank page	https://bugzilla.mozilla.org/show_bug.cgi?id=313946
+b318496	I lost permanent connexion on phpBB forums	https://bugzilla.mozilla.org/show_bug.cgi?id=318496
+b358365	Private data not cleared on closing Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=358365
+b364183	cookie from a Firefox Session saved in C:\Documents and Settings\user\Cookies	https://bugzilla.mozilla.org/show_bug.cgi?id=364183
+b367543	Firefox crashs at this bad script	https://bugzilla.mozilla.org/show_bug.cgi?id=367543
+b376614	This site loads a trojan to your PC - www.sexmovieporn.info	https://bugzilla.mozilla.org/show_bug.cgi?id=376614
+b383419	"The proxy ""authentication required"" dialog that appears at startup is sometimes horked"	https://bugzilla.mozilla.org/show_bug.cgi?id=383419
+b388963	CookieSafe and NoScript should be part of the core Firefox product	https://bugzilla.mozilla.org/show_bug.cgi?id=388963
+b402288	FF3 refuses to follow redirects via pragma refresh	https://bugzilla.mozilla.org/show_bug.cgi?id=402288
+b422255	"""Clear Private Data"" dialog box does non remember customizations."	https://bugzilla.mozilla.org/show_bug.cgi?id=422255
+b425784	"2.0.0.13 upgrade changed certificate preference to ""ask me every time"""	https://bugzilla.mozilla.org/show_bug.cgi?id=425784
+b430644	firefox keeps prompting for certificate with https client auth	https://bugzilla.mozilla.org/show_bug.cgi?id=430644
+b433324	"The ""add SSL exception"" dialog implies certs not recognized by Firefox are never legitimate"	https://bugzilla.mozilla.org/show_bug.cgi?id=433324
+b445579	Certificate authorities do not protect against Man in the Middle attacks	https://bugzilla.mozilla.org/show_bug.cgi?id=445579
+b465584	"Claim that non-https web site ""does not supply identity information"" is confusing/misleading"	https://bugzilla.mozilla.org/show_bug.cgi?id=465584
+b470006	Password Required popup should be ALWAYS ON TOP	https://bugzilla.mozilla.org/show_bug.cgi?id=470006
+b477829	Problem SSL with mod GNUTLS + APACHE 2	https://bugzilla.mozilla.org/show_bug.cgi?id=477829
+b484993	Favicon is not green for EV-Certificate. Shows blue instead.	https://bugzilla.mozilla.org/show_bug.cgi?id=484993
+b493335	got rootkit.agent	https://bugzilla.mozilla.org/show_bug.cgi?id=493335
+b504773	Firefox does not insert saved password without Username (blank Username)	https://bugzilla.mozilla.org/show_bug.cgi?id=504773
+b507582	Firefox is display certificate expired but certificate is displaying date is greater than current date	https://bugzilla.mozilla.org/show_bug.cgi?id=507582
+b512035	"after you visit an SSL page where SSL cert is ""IN-Correct"", you are not able to visit any other SSL pages"	https://bugzilla.mozilla.org/show_bug.cgi?id=512035
+b536740	24Dec'09 Trojan in Java (JRE) Loc Firefox 3.5.6	https://bugzilla.mozilla.org/show_bug.cgi?id=536740
+b559286	"Security error"" code: ""1000 in web content with Skype extension for Firefox"	https://bugzilla.mozilla.org/show_bug.cgi?id=559286
+b562010	"FireFox generates ""connection partially encrypted"" warning for pages that contain secure content from multiple domains"	https://bugzilla.mozilla.org/show_bug.cgi?id=562010
+b575891	install plug-in if a click a link	https://bugzilla.mozilla.org/show_bug.cgi?id=575891
+b599521	SSL Page Cannot Load	https://bugzilla.mozilla.org/show_bug.cgi?id=599521
+b601138	Abnormal look of Certificate's Larry window	https://bugzilla.mozilla.org/show_bug.cgi?id=601138
+b611362	application security initialization error with 4.0b7	https://bugzilla.mozilla.org/show_bug.cgi?id=611362
+b615090	Firefox 3.6.x leaks DNS queries when using a SOCKS proxy	https://bugzilla.mozilla.org/show_bug.cgi?id=615090
+b619921	No encryption lock icon.	https://bugzilla.mozilla.org/show_bug.cgi?id=619921
+b630282	Minimum Security	https://bugzilla.mozilla.org/show_bug.cgi?id=630282
+b640200	firefox, feature, plugin, check	https://bugzilla.mozilla.org/show_bug.cgi?id=640200
+b662539	"Untrusted connection page: security dialog box does not open when ""Add Exception..."" clicked"	https://bugzilla.mozilla.org/show_bug.cgi?id=662539
+b665278	Security exploit? Website installing viruses	https://bugzilla.mozilla.org/show_bug.cgi?id=665278
+b688116	malware site can remotely execute code	https://bugzilla.mozilla.org/show_bug.cgi?id=688116
+b873349	Add a whitelist for mixed content blocking	https://bugzilla.mozilla.org/show_bug.cgi?id=873349
+b882467	"Mixed Content Telemetry - How many times do users click ""Disable Protection"""	https://bugzilla.mozilla.org/show_bug.cgi?id=882467	"
+a/browser/base/content/browser.js
+a/content/base/src/nsDocument.cpp
+a/toolkit/components/telemetry/Histograms.json"	https://bugzilla.mozilla.org/attachment.cgi?id=799149&action=diff		
+b900766	https://myaccount.rosettastone.com/manage/nolicense - Mixed Display issues	https://bugzilla.mozilla.org/show_bug.cgi?id=900766
+b1020072	"ignore autocomplete=""off"" when offering to save passwords via the password manager - implications"	https://bugzilla.mozilla.org/show_bug.cgi?id=1020072
+b1105704	Fix UI issues with SSL error reporting	https://bugzilla.mozilla.org/show_bug.cgi?id=1105704	"
+a/browser/base/content/aboutNetError.xhtml
+a/browser/themes/shared/aboutNetError.css"	https://bugzilla.mozilla.org/attachment.cgi?id=8555422&action=diff	"
+        // Pinning errors are of type nssFailure2 (don't ask me why)
+          // TODO: and the pref is set...
+
+            // a ""learn more"" link based on description:
+            if (getDescription().contains(""mozilla_pkix_error_key_pinning_failure"")) {
+              learnMoreLink.href = ""https://support.mozilla.org/kb/certificate-pinning-reports"";
+            }
+
+        <!-- TODO add link to relevant page on sumo -->
+        <a href=""https://support.mozilla.org/kb/certificate-pinning-reports"" target=""new"">&errorReporting.learnMore;</a>"	"
+        // Pinning errors are of type nssFailure2
+            var learnMoreLink = document.getElementById(""learnMoreLink"");
+            // nssFailure2 also gets us other non-overrideable errors. Choose
+        <a href=""https://support.mozilla.org/kb/tls-error-reports"" id=""learnMoreLink"" target=""new"">&errorReporting.learnMore;</a>
+"
+b834836	Turn on pref to block mixed active content	https://bugzilla.mozilla.org/show_bug.cgi?id=834836	"
+a/content/base/test/chrome/test_csp_bug768029.html"	https://bugzilla.mozilla.org/attachment.cgi?id=712013&action=diff	"
+                                   [""security.apps.certified.CSP.default"", DEFAULT_CSP_CERT]]},
+
+                                   [""security.mixed_content.block_display_content"", false]]},"	"
+                                   [""security.apps.certified.CSP.default"", DEFAULT_CSP_CERT],
+                                   [""security.mixed_content.block_active_content"", false],"
+b838359	There's no obvious (to users) reason why we're showing yellow-triangle-with-exclamation-point vs. globe, for mixed-content sites	https://bugzilla.mozilla.org/show_bug.cgi?id=838359	"
+a/browser/base/content/browser.js"	https://bugzilla.mozilla.org/attachment.cgi?id=714528&action=diff	"
+      if (state & nsIWebProgressListener.STATE_LOADED_MIXED_ACTIVE_CONTENT) {
+"	"
+      if ((state & nsIWebProgressListener.STATE_LOADED_MIXED_ACTIVE_CONTENT) &&
+          gPrefService.getBoolPref(""security.mixed_content.block_active_content"")) {"
+b840641	Large Shield Icon Missing in Mixed Content Blocker Doorhanger	https://bugzilla.mozilla.org/show_bug.cgi?id=840641	"
+a/browser/themes/gnomestripe/browser.css
+a/browser/themes/gnomestripe/jar.mn
+a/browser/themes/winstripe/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=714663&action=diff		
+b843540	[Windows] Shield icon missing in Mixed content blocker doorhanger	https://bugzilla.mozilla.org/show_bug.cgi?id=843540	"
+a/browser/themes/winstripe/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=716692&action=diff		
+b865352	Replace grey globe with grey warning triangle when the page contains mixed passive content	https://bugzilla.mozilla.org/show_bug.cgi?id=865352	"
+a/browser/base/content/browser.js
+a/browser/themes/linux/jar.mn
+a/browser/themes/osx/browser.css
+a/browser/themes/osx/jar.mn
+a/browser/themes/shared/identity-block.inc.css
+a/browser/themes/windows/jar.mn"	https://bugzilla.mozilla.org/attachment.cgi?id=786589&action=diff	"
+  IDENTITY_MODE_MIXED_DISPLAY_LOADED_ACTIVE_BLOCKED    : ""unknownIdentity mixedContent"",  // SSL with unauthenticated display content; unauthenticated active content is blocked."	"
+  IDENTITY_MODE_MIXED_DISPLAY_LOADED_ACTIVE_BLOCKED    : ""unknownIdentity mixedContent mixedDisplayContent"",  // SSL with unauthenticated display content; unauthenticated active content is blocked."
+b912817	Mixed display-only pages showing the wrong text	https://bugzilla.mozilla.org/show_bug.cgi?id=912817	"
+a/browser/base/content/browser.js
+a/browser/themes/osx/browser.css
+a/browser/themes/shared/identity-block.inc.css"	https://bugzilla.mozilla.org/attachment.cgi?id=801852&action=diff	"
+  IDENTITY_MODE_MIXED_DISPLAY_LOADED_ACTIVE_BLOCKED    : ""unknownIdentity mixedContent mixedDisplayContent"",  // SSL with unauthenticated display content; unauthenticated active content is blocked."	"
+  IDENTITY_MODE_MIXED_DISPLAY_LOADED_ACTIVE_BLOCKED    : ""unknownIdentity mixedContent mixedDisplayContentLoadedActiveBlocked"",  // SSL with unauthenticated display content; unauthenticated active content is blocked."
+b913710	Change the Larry Menu Text when Mixed Scripts are blocked but the page contains Mixed Display	https://bugzilla.mozilla.org/show_bug.cgi?id=913710	"
+a/browser/base/content/browser.js
+a/browser/locales/en-US/chrome/browser/browser.properties"	https://bugzilla.mozilla.org/attachment.cgi?id=804808&action=diff	"
+      gNavigatorBundle.getString(""identity.mixed_display_loaded_active_blocked"");"	"
+      gNavigatorBundle.getString(""identity.mixed_display_loaded"");"
+b420356	Ship blocklist.xml with Firefox	https://bugzilla.mozilla.org/show_bug.cgi?id=420356	"
+a/browser/app/Makefile.in
+a/browser/app/blocklist.xml
+a/browser/installer/unix/packages-static
+a/browser/installer/windows/packages-static
+a/toolkit/mozapps/extensions/src/nsBlocklistService.js"	https://bugzilla.mozilla.org/attachment.cgi?id=310358&action=diff		
+b1207619	[Control Center] Information about the website certificate are truncated and incomplete by default	https://bugzilla.mozilla.org/show_bug.cgi?id=1207619
+b1244022	Wrong mouse over message for crossed out lock icon	https://bugzilla.mozilla.org/show_bug.cgi?id=1244022	"
+a/browser/base/content/browser.js
+a/browser/locales/en-US/chrome/browser/browser.properties"	https://bugzilla.mozilla.org/attachment.cgi?id=8733004&action=diff		
+b1179961	Use a lock with a strikethrough for HTTP pages that have Password Fields in the Control Center	https://bugzilla.mozilla.org/show_bug.cgi?id=1179961
+b1216699	Add Learn More link to Insecure Password Warning in Control Center	https://bugzilla.mozilla.org/show_bug.cgi?id=1216699
+b1217766	All PDFs trigger the insecure password warning	https://bugzilla.mozilla.org/show_bug.cgi?id=1217766
+b1217133	Don't warn about insecure passwords on localhost	https://bugzilla.mozilla.org/show_bug.cgi?id=1217133	"
+a/browser/base/content/test/general/browser_insecureLoginForms.js
+a/dom/interfaces/security/nsIContentSecurityManager.idl
+a/toolkit/components/passwordmgr/LoginManagerContent.jsm"	https://bugzilla.mozilla.org/attachment.cgi?id=8685412&action=diff	"
+const testUrlPath =
+      ""://example.com/browser/toolkit/components/passwordmgr/test/browser/"";
+  for (let scheme of [""http"", ""https""]) {
+    let tab = gBrowser.addTab(scheme + testUrlPath + ""form_basic.html"");
+
+    [""https://example.com"", false],
+  ]) {
+    let testUrlPath = origin + TEST_URL_PATH;
+    let tab = gBrowser.addTab(testUrlPath + ""form_basic.html"");
+    if (scheme == ""http"") {
+       scheme == ""http"",
+       ""The relevant messages should visible or hidden."");"	"
+const TEST_URL_PATH = ""/browser/toolkit/components/passwordmgr/test/browser/"";
+
+  for (let [origin, expectWarning] of [
+    [""http://example.com"", true],
+    [""http://127.0.0.1"", false],
+    if (expectWarning) {
+       expectWarning,
+       ""The relevant messages should be visible or hidden."");"
+b1221206	Turn on Insecure Password Warning for Firefox Dev Edition	https://bugzilla.mozilla.org/show_bug.cgi?id=1221206	"
+a/browser/app/profile/firefox.js"	https://bugzilla.mozilla.org/attachment.cgi?id=8710111&action=diff	"
+// Show degraded UI for http pages with password fields
+#ifdef NIGHTLY_BUILD
+"	"
+// Show degraded UI for http pages with password fields.
+// Only for Nightly and Dev Edition for not, not for beta or release.
+#ifndef RELEASE_BUILD"
+b1193849	"Bugs with ""Learn More"" link for Mixed Content Blocker in Control Center"	https://bugzilla.mozilla.org/show_bug.cgi?id=1193849	"
+a/browser/components/controlcenter/content/panel.inc.xul"	https://bugzilla.mozilla.org/attachment.cgi?id=8664798&action=diff	"
+        <description when-mixedcontent=""active-loaded"">&identity.description.activeLoaded2;</description>"	"
+        <description when-mixedcontent=""active-loaded"">&identity.description.activeLoaded2; <label observes=""identity-popup-mcb-learn-more""/></description>"
+b483950	Remove/hide status bar domain display text	https://bugzilla.mozilla.org/show_bug.cgi?id=483950	"
+a/browser/base/content/browser.css"	https://bugzilla.mozilla.org/attachment.cgi?id=370522&action=diff		
+b415704	"Selecting ""More Information"" from the Larry UI does not launch Page Info"	https://bugzilla.mozilla.org/show_bug.cgi?id=415704	"
+browser/base/content/browser.xul"	https://bugzilla.mozilla.org/attachment.cgi?id=306084&action=diff		
+b1186892	"Strikethrough of ""http"" appears broken when protection is disabled on pages with insecure content"	https://bugzilla.mozilla.org/show_bug.cgi?id=1186892

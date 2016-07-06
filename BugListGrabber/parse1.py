@@ -1,7 +1,9 @@
 import argparse
 import csv
 import sys
-
+#Link to search used (with and w/o ampersands quoted)
+#https://bugzilla.mozilla.org/buglist.cgi?resolution=FIXED&resolution=WONTFIX&resolution=WORKSFORME&resolution=SUPPORT&resolution=EXPIRED&query_format=advanced&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&bug_status=RESOLVED&bug_status=VERIFIED&bug_status=CLOSED&component=Security&product=Firefox
+#https://bugzilla.mozilla.org/buglist.cgi?resolution=FIXED"&"resolution=WONTFIX"&"resolution=WORKSFORME"&"resolution=SUPPORT"&"resolution=EXPIRED"&"query_format=advanced"&"bug_status=NEW"&"bug_status=ASSIGNED"&"bug_status=REOPENED"&"bug_status=RESOLVED"&"bug_status=VERIFIED"&"bug_status=CLOSED"&"component=Security"&"product=Firefox
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
