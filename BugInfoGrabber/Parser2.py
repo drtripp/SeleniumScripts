@@ -65,7 +65,7 @@ class Parser(object):
 
                             print '\t\tdiff added: ' + difflink + ' with name ' + name
                             found = found + 1
-                            _results.append((bugid, name, url, filename, difflink, oldcode, newcode))
+                            _results.append((bugid, name, url, filename))#, difflink, oldcode, newcode))
                             oldcode, newcode = ['', '']
                 except NoSuchElementException:
                     print 'no more diffs found'
@@ -75,6 +75,6 @@ class Parser(object):
             traceback.print_exception(extype, exvalue, extrace)
             print 'something happened'
 
-        if found == 0:
-            _results.append((bugid, name, url))
+        #if found == 0:
+            #_results.append((bugid, name, url))
         return _results
